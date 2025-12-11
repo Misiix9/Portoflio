@@ -1,0 +1,24 @@
+# Sitemap location
+Sitemap: https://selora.dev/sitemap.xml
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow specific paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+# Crawl delay for politeness (optional)
+Crawl-delay: 1
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
