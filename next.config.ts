@@ -5,7 +5,7 @@ import type { NextConfig } from 'next';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-    // output: 'export',
+    output: process.env.GITHUB_ACTIONS ? 'export' : undefined,
     trailingSlash: true,
     images: {
         unoptimized: true,
