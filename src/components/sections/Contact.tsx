@@ -3,16 +3,17 @@
 import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import emailjs from '@emailjs/browser';
 import { useTranslations } from 'next-intl';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
 export default function Contact() {
   const t = useTranslations('Contact');
+  const { canUseAmbientMotion } = usePerformanceMode();
   const form = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error' | 'config'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
 
-  const sendEmail = (e: React.FormEvent) => {
+  const sendEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.current) return;
 
@@ -29,29 +30,29 @@ export default function Contact() {
        return;
     }
 
-    emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, { publicKey: PUBLIC_KEY })
-      .then(() => {
-          setStatus('success');
-          setStatusMessage(t('success'));
-          form.current?.reset();
-          setTimeout(() => {
-            setStatus('idle');
-            setStatusMessage('');
-          }, 3000);
-      }, () => {
-          setStatus('error');
-          setStatusMessage(t('error'));
-      });
+    try {
+      const emailjs = await import('@emailjs/browser');
+      await emailjs.default.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, { publicKey: PUBLIC_KEY });
+      setStatus('success');
+      setStatusMessage(t('success'));
+      form.current?.reset();
+      setTimeout(() => {
+        setStatus('idle');
+        setStatusMessage('');
+      }, 3000);
+    } catch {
+      setStatus('error');
+      setStatusMessage(t('error'));
+    }
   };
 
   return (
     <section id="contact" className="min-h-[80vh] container mx-auto px-6 py-24 flex flex-col items-center justify-center">
       <motion.div
-        initial={{ opacity: 0, y: 50, rotateX: 10 }}
+        initial={canUseAmbientMotion ? { opacity: 0, y: 32 } : false}
         whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        style={{ transformPerspective: 1000 }}
+        transition={{ duration: 0.48, ease: "easeOut" }}
         className="w-full max-w-2xl"
       >
         <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tighter text-center mb-4">

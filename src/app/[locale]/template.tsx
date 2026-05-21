@@ -1,22 +1,22 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
 export default function Template({ children }: { children: React.ReactNode }) {
+  const { canUseAmbientMotion, mode } = usePerformanceMode();
+
   return (
     <>
       <motion.div
-        initial={{ filter: "blur(20px)", opacity: 0, scale: 0.98 }}
-        animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
-        exit={{ filter: "blur(20px)", opacity: 0, scale: 0.98 }}
-        transition={{ ease: "easeInOut", duration: 0.75 }}
+        initial={canUseAmbientMotion ? { opacity: 0, y: mode === 'full' ? 12 : 6 } : false}
+        animate={{ opacity: 1, y: 0 }}
+        exit={canUseAmbientMotion ? { opacity: 0, y: -6 } : undefined}
+        transition={{ ease: "easeOut", duration: mode === 'full' ? 0.32 : 0.2 }}
         className="w-full h-full"
       >
         {children}
       </motion.div>
-      
-      {/* "Liquid" Overlay simulation using a distinct colored wipe if wanted, 
-          but blur/scale is cleaner/safer for performance */ }
     </>
   );
 }

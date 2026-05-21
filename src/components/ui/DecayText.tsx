@@ -1,13 +1,30 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
 export default function DecayText({ text, className = "", highlightWords = [] }: { text: string, className?: string, highlightWords?: string[] }) {
   // OPTIMIZATION: Removed scroll-linked animation. It was causing severe lag due to 
   // hundreds of active event listeners (one per character).
   // Now using a staggered entry animation which is much lighter.
-
+  const { canUseAmbientMotion, mode } = usePerformanceMode();
   const words = text.split(" ");
+
+  if (!canUseAmbientMotion || mode !== 'full') {
+    return (
+      <h2 className={`relative flex flex-wrap justify-center gap-[0.3em] ${className}`}>
+        {words.map((word, wIndex) => {
+          const normalizedWord = word.replace(/[^\p{L}\p{N}]/gu, "");
+          const isHighlighted = highlightWords.includes(normalizedWord);
+          return (
+            <span key={wIndex} className={isHighlighted ? 'text-accent' : ''}>
+              {word}
+            </span>
+          );
+        })}
+      </h2>
+    );
+  }
   
   const container: Variants = {
     hidden: { opacity: 0 },

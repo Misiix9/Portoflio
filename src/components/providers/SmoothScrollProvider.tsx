@@ -1,28 +1,17 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
-import { ReactLenis } from 'lenis/react';
-import { useReducedMotion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { ReactNode } from 'react';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
+
+const LenisRoot = dynamic(() => import('@/components/providers/LenisRoot'), { ssr: false });
 
 export default function SmoothScrollProvider({ children }: { children: ReactNode }) {
-  const shouldReduceMotion = useReducedMotion();
-  const [enableSmoothScroll, setEnableSmoothScroll] = useState(false);
+  const { canUseSmoothScroll } = usePerformanceMode();
 
-  useEffect(() => {
-    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const update = () => setEnableSmoothScroll(query.matches && !shouldReduceMotion);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, [shouldReduceMotion]);
-
-  if (!enableSmoothScroll) {
+  if (!canUseSmoothScroll) {
     return <>{children}</>;
   }
 
-  return (
-    <ReactLenis root options={{ lerp: 0.08, duration: 1.1, smoothWheel: true }}>
-      {children}
-    </ReactLenis>
-  );
+  return <LenisRoot>{children}</LenisRoot>;
 }

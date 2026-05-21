@@ -1,30 +1,25 @@
 'use client';
 
-import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import DecayText from '@/components/ui/DecayText';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 import { showcaseItems, type ShowcaseFilter, type ShowcaseItem } from '@/data/showcase';
 
 const filters: ShowcaseFilter[] = ['all', 'project', 'study'];
 
-function useFinePointer() {
-  const [isFinePointer, setIsFinePointer] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const update = () => setIsFinePointer(query.matches);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, []);
-
-  return isFinePointer;
-}
-
-function Card({ item, enableTilt }: { item: ShowcaseItem; enableTilt: boolean }) {
+function Card({
+  item,
+  enableTilt,
+  enableMotion,
+}: {
+  item: ShowcaseItem;
+  enableTilt: boolean;
+  enableMotion: boolean;
+}) {
   const t = useTranslations('Showcase');
   const ref = useRef<HTMLAnchorElement>(null);
   const x = useMotionValue(0);
@@ -57,10 +52,10 @@ function Card({ item, enableTilt }: { item: ShowcaseItem; enableTilt: boolean })
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t('open', { title })}
-      initial={{ opacity: 0, y: enableTilt ? 28 : 0 }}
+      initial={enableMotion ? { opacity: 0, y: 18 } : false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
       whileHover={enableTilt ? { y: -8 } : undefined}
       whileTap={enableTilt ? { scale: 0.985 } : undefined}
       onMouseMove={handleMouseMove}
@@ -80,7 +75,7 @@ function Card({ item, enableTilt }: { item: ShowcaseItem; enableTilt: boolean })
               }
             : undefined
         }
-        className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.28)] transition-colors duration-300 group-hover/card:border-accent/50 ${item.imageBg}`}
+        className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 transition-colors duration-300 group-hover/card:border-accent/50 ${enableTilt ? 'shadow-[0_24px_70px_rgba(0,0,0,0.28)]' : 'shadow-lg'} ${item.imageBg}`}
       >
         <div className="absolute inset-0">
           <Image
@@ -88,7 +83,7 @@ function Card({ item, enableTilt }: { item: ShowcaseItem; enableTilt: boolean })
             alt={title}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className={`${item.imageFit === 'contain' ? 'object-contain p-8' : 'object-cover'} transition duration-500 ease-out group-hover/card:scale-[1.04]`}
+            className={`${item.imageFit === 'contain' ? 'object-contain p-8' : 'object-cover'} ${enableMotion ? 'transition duration-500 ease-out group-hover/card:scale-[1.04]' : ''}`}
           />
         </div>
 
@@ -119,9 +114,8 @@ function Card({ item, enableTilt }: { item: ShowcaseItem; enableTilt: boolean })
 export default function MagneticGallery() {
   const t = useTranslations('Showcase');
   const [filter, setFilter] = useState<ShowcaseFilter>('all');
-  const shouldReduceMotion = useReducedMotion();
-  const isFinePointer = useFinePointer();
-  const enableTilt = Boolean(isFinePointer && !shouldReduceMotion);
+  const profile = usePerformanceMode();
+  const enableTilt = Boolean(profile.mode === 'full' && profile.isFinePointer && profile.canUseAmbientMotion);
 
   const filteredProjects = useMemo(
     () =>
@@ -162,7 +156,12 @@ export default function MagneticGallery() {
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-x-12 md:gap-y-14">
         {filteredProjects.map((item) => (
-          <Card key={item.id} item={item} enableTilt={enableTilt} />
+          <Card
+            key={item.id}
+            item={item}
+            enableTilt={enableTilt}
+            enableMotion={profile.canUseAmbientMotion}
+          />
         ))}
       </div>
     </section>

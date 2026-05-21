@@ -1,7 +1,15 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import useSound from 'use-sound';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 
 interface SoundContextType {
   isMuted: boolean;
@@ -18,37 +26,68 @@ const CLICK_SOUND = '/sounds/click.mp3'; // User provided file
 
 export function SoundProvider({ children }: { children: ReactNode }) {
   const [isMuted, setIsMuted] = useState(true); // Default to muted
-  
-  const [playHoverSfx] = useSound(HOVER_SOUND, { volume: 0.1, soundEnabled: !isMuted });
-  const [playClickSfx] = useSound(CLICK_SOUND, { volume: 0.1, soundEnabled: !isMuted });
+  const clickAudioRef = useRef<HTMLAudioElement | null>(null);
+  const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const getAudio = useCallback((kind: 'click' | 'hover') => {
+    if (typeof window === 'undefined') return null;
+
+    const ref = kind === 'click' ? clickAudioRef : hoverAudioRef;
+    if (!ref.current) {
+      const audio = new Audio(kind === 'click' ? CLICK_SOUND : HOVER_SOUND);
+      audio.preload = 'auto';
+      audio.volume = 0.1;
+      ref.current = audio;
+    }
+
+    return ref.current;
+  }, []);
 
   const playClick = useCallback(() => {
     if (!isMuted) {
-      // Small random pitch variation for realism
-      playClickSfx({ playbackRate: 0.95 + Math.random() * 0.1 });
+      const audio = getAudio('click');
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.playbackRate = 0.95 + Math.random() * 0.1;
+      void audio.play().catch(() => {});
     }
-  }, [isMuted, playClickSfx]);
+  }, [getAudio, isMuted]);
 
   const playHover = useCallback(() => {
-    if (!isMuted) playHoverSfx();
-  }, [isMuted, playHoverSfx]);
+    if (!isMuted) {
+      const audio = getAudio('hover');
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
+      void audio.play().catch(() => {});
+    }
+  }, [getAudio, isMuted]);
 
-  // Global Click Listener
+  const toggleMute = useCallback(() => {
+    setIsMuted((current) => {
+      if (current) {
+        getAudio('click')?.load();
+        getAudio('hover')?.load();
+      }
+      return !current;
+    });
+  }, [getAudio]);
+
   useEffect(() => {
-    const handleGlobalClick = () => {
-      playClick();
-    };
+    if (isMuted) return;
 
-    window.addEventListener('click', handleGlobalClick);
-    return () => {
-      window.removeEventListener('click', handleGlobalClick);
-    };
-  }, [playClick]);
+    window.addEventListener('click', playClick);
+    return () => window.removeEventListener('click', playClick);
+  }, [isMuted, playClick]);
 
-  const toggleMute = useCallback(() => setIsMuted((current) => !current), []);
+  const value = useMemo(
+    () => ({ isMuted, toggleMute, playHover, playClick }),
+    [isMuted, playClick, playHover, toggleMute],
+  );
 
   return (
-    <SoundContext.Provider value={{ isMuted, toggleMute, playHover, playClick }}>
+    <SoundContext.Provider value={value}>
       {children}
     </SoundContext.Provider>
   );

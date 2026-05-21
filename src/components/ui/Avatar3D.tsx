@@ -4,13 +4,14 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Icosahedron, Float } from '@react-three/drei';
 import * as THREE from 'three';
-import { useReducedMotion } from 'framer-motion';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
-function DigitalHead() {
+function DigitalHead({ activeMotion }: { activeMotion: boolean }) {
   const ref = useRef<THREE.Mesh>(null!);
   const [hovered, setHover] = useState(false);
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
+    if (!activeMotion) return;
     if (!ref.current) return;
     
     // Look at mouse
@@ -25,14 +26,13 @@ function DigitalHead() {
          ref.current.position.x = (Math.random() - 0.5) * 0.1;
          ref.current.position.y = (Math.random() - 0.5) * 0.1;
     } else {
-        ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, 0, 0.1);
-        ref.current.position.y = THREE.MathUtils.lerp(ref.current.position.y, 0, 0.1);
+        ref.current.position.x = THREE.MathUtils.lerp(ref.current.position.x, 0, delta * 6);
+        ref.current.position.y = THREE.MathUtils.lerp(ref.current.position.y, 0, delta * 6);
     }
   });
 
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <Icosahedron 
+  const mesh = (
+    <Icosahedron
         args={[1, 1]} 
         ref={ref}
         onPointerOver={() => setHover(true)}
@@ -46,23 +46,43 @@ function DigitalHead() {
             emissiveIntensity={hovered ? 2 : 0.5}
         />
       </Icosahedron>
+  );
+
+  if (!activeMotion) {
+    return mesh;
+  }
+
+  return (
+    <Float speed={1.5} rotationIntensity={0.35} floatIntensity={0.35}>
+      {mesh}
     </Float>
   );
 }
 
 export default function Avatar3D() {
-  const shouldReduceMotion = useReducedMotion();
+  const profile = usePerformanceMode();
+  const activeMotion = profile.mode === 'full' && profile.canUseAmbientMotion;
 
-  if (shouldReduceMotion) {
+  if (!profile.canUseHeavyVisuals) {
     return null;
   }
 
   return (
     <div className="w-full h-full absolute inset-0 pointer-events-none z-0">
-      <Canvas camera={{ position: [0, 0, 5] }} gl={{ alpha: true }} dpr={[1, 1.5]}>
+      <Canvas
+        camera={{ position: [0, 0, 5] }}
+        dpr={[1, profile.maxDpr]}
+        frameloop={activeMotion ? 'always' : 'demand'}
+        fallback={null}
+        gl={{
+          alpha: true,
+          antialias: false,
+          powerPreference: activeMotion ? 'high-performance' : 'low-power',
+        }}
+      >
         <ambientLight intensity={1} />
         <pointLight position={[10, 10, 10]} intensity={5} />
-        <DigitalHead />
+        <DigitalHead activeMotion={activeMotion} />
       </Canvas>
     </div>
   );

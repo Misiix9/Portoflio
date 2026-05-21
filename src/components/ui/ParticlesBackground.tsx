@@ -1,78 +1,69 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
-import { useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
-const POINT_COUNT = 1600;
+function createSphere(pointCount: number) {
+  const temp = new Float32Array(pointCount * 3);
+  for (let i = 0; i < pointCount; i++) {
+    temp[i * 3] = (Math.random() - 0.5) * 10;
+    temp[i * 3 + 1] = (Math.random() - 0.5) * 10;
+    temp[i * 3 + 2] = (Math.random() - 0.5) * 10;
+  }
+  return temp;
+}
 
-function StarField() {
+function StarField({ pointCount, activeMotion }: { pointCount: number; activeMotion: boolean }) {
   const ref = useRef<THREE.Points>(null);
-  
-  // Generate random points in a sphere
-  const [sphere, setSphere] = useState<Float32Array | null>(null);
-
-  useEffect(() => {
-    const temp = new Float32Array(POINT_COUNT * 3);
-    for (let i = 0; i < POINT_COUNT; i++) {
-        const x = (Math.random() - 0.5) * 10;
-        const y = (Math.random() - 0.5) * 10;
-        const z = (Math.random() - 0.5) * 10;
-        temp[i*3] = x;
-        temp[i*3+1] = y;
-        temp[i*3+2] = z;
-    }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSphere(temp);
-  }, []);
+  const sphere = useMemo(() => createSphere(pointCount), [pointCount]);
 
   useFrame((state, delta) => {
+    if (!activeMotion) return;
     if (ref.current) {
-      ref.current.rotation.x -= delta / 10;
-      ref.current.rotation.y -= delta / 15;
+      ref.current.rotation.x -= delta / 18;
+      ref.current.rotation.y -= delta / 24;
     }
   });
 
   return (
     <group rotation={[0, 0, Math.PI / 4]}>
-      {sphere && (
-        <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-            <PointMaterial
-            transparent
-            color="#56020a"
-            size={0.02}
-            sizeAttenuation={true}
-            depthWrite={false}
-            opacity={0.5}
-            />
-        </Points>
-      )}
+      <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
+          <PointMaterial
+          transparent
+          color="#56020a"
+          size={0.02}
+          sizeAttenuation={true}
+          depthWrite={false}
+          opacity={0.45}
+          />
+      </Points>
     </group>
   );
 }
 
 export default function ParticlesBackground() {
-  const shouldReduceMotion = useReducedMotion();
-  const [isEnabled, setIsEnabled] = useState(false);
+  const profile = usePerformanceMode();
 
-  useEffect(() => {
-    const query = window.matchMedia('(min-width: 768px)');
-    const update = () => setIsEnabled(query.matches && !shouldReduceMotion);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, [shouldReduceMotion]);
-
-  if (!isEnabled) {
+  if (!profile.canUseHeavyVisuals || profile.particleCount === 0) {
     return null;
   }
 
   return (
     <div className="fixed inset-0 z-[-1] pointer-events-none opacity-40">
-      <Canvas camera={{ position: [0, 0, 1] }} dpr={[1, 1.25]}>
-        <StarField />
+      <Canvas
+        camera={{ position: [0, 0, 1] }}
+        dpr={[1, profile.maxDpr]}
+        frameloop={profile.canUseAmbientMotion ? 'always' : 'demand'}
+        fallback={null}
+        gl={{ antialias: false, powerPreference: 'low-power' }}
+      >
+        <StarField
+          pointCount={profile.particleCount}
+          activeMotion={profile.canUseAmbientMotion}
+        />
       </Canvas>
     </div>
   );

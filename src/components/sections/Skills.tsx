@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Code, Layout, Database, Terminal, Smartphone, Palette } from 'lucide-react';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
 const skills = [
   { key: 'web', icon: Layout },
@@ -15,13 +16,16 @@ const skills = [
 
 export default function Skills() {
   const t = useTranslations('Skills');
+  const { canUseAmbientMotion, mode } = usePerformanceMode();
+  const enableCardLift = canUseAmbientMotion && mode === 'full';
 
   return (
     <section id="skills" className="min-h-screen container mx-auto px-6 py-24 flex flex-col justify-center">
        <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={canUseAmbientMotion ? { opacity: 0, y: 20 } : false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        transition={{ duration: 0.42, ease: 'easeOut' }}
         className="mb-16 text-center"
       >
         <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tighter mb-4">
@@ -35,11 +39,11 @@ export default function Skills() {
           <motion.div
             key={skill.key}
             className="group relative flex flex-col items-center justify-center p-8 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm overflow-hidden hover:border-accent/50 transition-colors"
-            initial={{ opacity: 0, y: 20 }}
+            initial={canUseAmbientMotion ? { opacity: 0, y: 16 } : false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -10 }}
+            transition={{ delay: canUseAmbientMotion ? index * 0.05 : 0 }}
+            whileHover={enableCardLift ? { y: -8 } : undefined}
           >
              <div className="absolute inset-0 bg-gradient-to-tr from-accent/0 via-accent/0 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
              

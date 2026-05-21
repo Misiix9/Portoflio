@@ -1,10 +1,16 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useKonamiCode } from '@/hooks/useKonamiCode';
-import GameOverlay from '@/components/ui/GameOverlay';
+
+const GameOverlay = dynamic(() => import('@/components/ui/GameOverlay'), { ssr: false });
 
 export default function GameWrapper() {
   const { triggered, setTriggered } = useKonamiCode();
+
+  if (!triggered) {
+    return null;
+  }
   
   return (
     <GameOverlay 

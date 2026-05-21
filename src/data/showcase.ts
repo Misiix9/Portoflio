@@ -24,7 +24,7 @@ export const showcaseItems: ShowcaseItem[] = [
   {
     id: 'footify-landing',
     kind: 'project',
-    image: '/images/landing.png',
+    image: '/images/landing-card.jpg',
     imageFit: 'contain',
     imageBg: 'bg-[#07100c]',
     year: '2024',
@@ -33,7 +33,7 @@ export const showcaseItems: ShowcaseItem[] = [
   {
     id: 'footify-app',
     kind: 'project',
-    image: '/images/footifyApp.png',
+    image: '/images/footifyApp-card.jpg',
     imageFit: 'contain',
     imageBg: 'bg-black',
     year: '2024',
@@ -42,7 +42,7 @@ export const showcaseItems: ShowcaseItem[] = [
   {
     id: 'savys-tips',
     kind: 'project',
-    image: '/images/showcase/savys-tips-premium.png',
+    image: '/images/showcase/savys-tips-premium-card.jpg',
     imageFit: 'contain',
     imageBg: 'bg-[#c70f24]',
     year: '2026',
@@ -69,7 +69,7 @@ export const showcaseItems: ShowcaseItem[] = [
   {
     id: 'petofi-aszod',
     kind: 'study',
-    image: '/images/showcase/petofi-building.jpg',
+    image: '/images/showcase/petofi-building-card.jpg',
     imageFit: 'cover',
     imageBg: 'bg-[#141414]',
     year: '2020-2025',

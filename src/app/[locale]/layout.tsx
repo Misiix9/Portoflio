@@ -7,6 +7,7 @@ import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import { SoundProvider } from "@/components/providers/SoundProvider";
 import MotionProvider from "@/components/providers/MotionProvider";
 import VisualEffects from "@/components/providers/VisualEffects";
+import { PerformanceProvider } from "@/components/providers/PerformanceProvider";
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -155,18 +156,20 @@ export default async function RootLayout({
     <html lang={locale} className={`${lexend.variable}`} suppressHydrationWarning>
       <body className="antialiased bg-background text-foreground selection:bg-accent selection:text-white" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
-          <MotionProvider>
-           <SoundProvider>
-             <SmoothScrollProvider>
-               <script
-                  type="application/ld+json"
-                  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-               />
-               {children}
-               <VisualEffects />
-             </SmoothScrollProvider>
-           </SoundProvider>
-          </MotionProvider>
+          <PerformanceProvider>
+            <MotionProvider>
+             <SoundProvider>
+               <SmoothScrollProvider>
+                 <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                 />
+                 {children}
+                 <VisualEffects />
+               </SmoothScrollProvider>
+             </SoundProvider>
+            </MotionProvider>
+          </PerformanceProvider>
         </NextIntlClientProvider>
       </body>
     </html>

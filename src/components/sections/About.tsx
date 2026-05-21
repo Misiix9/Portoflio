@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale, useTranslations } from 'next-intl';
@@ -9,17 +9,13 @@ import { MapPin, Database, Layout, Server, Code, Palette, Terminal, Clock, Chevr
 import { useGitHubActivity } from '@/hooks/useGitHubActivity';
 import { useSpotifyPlayback } from '@/hooks/useSpotifyPlayback';
 import { useNextAvailability } from '@/hooks/useNextAvailability';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
-export default function About() {
-  const t = useTranslations('About');
-  const locale = useLocale();
-
-  // Live time state
-  const [budapestTime, setBudapestTime] = useState('');
+const BudapestClock = memo(function BudapestClock() {
+  const [budapestTime, setBudapestTime] = useState('--:--');
 
   useEffect(() => {
     const updateTimes = () => {
-      // Budapest time (Europe/Budapest timezone)
       const budapest = new Date().toLocaleTimeString('en-US', {
         timeZone: 'Europe/Budapest',
         hour: '2-digit',
@@ -30,9 +26,87 @@ export default function About() {
     };
 
     updateTimes();
-    const interval = setInterval(updateTimes, 1000);
+    const interval = window.setInterval(updateTimes, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  return <>{budapestTime}</>;
+});
+
+function formatTrackTime(value: number) {
+  return `${Math.floor(value / 60000)}:${String(Math.floor((value % 60000) / 1000)).padStart(2, '0')}`;
+}
+
+function SpotifyProgress({
+  isPlaying,
+  progressMs,
+  durationMs,
+  progressUpdatedAt,
+}: {
+  isPlaying: boolean;
+  progressMs: number;
+  durationMs: number;
+  progressUpdatedAt: number | null;
+}) {
+  const elapsedRef = useRef<HTMLSpanElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let interval = 0;
+
+    const update = () => {
+      const elapsed = isPlaying && progressUpdatedAt ? Date.now() - progressUpdatedAt : 0;
+      const current = Math.min(progressMs + elapsed, durationMs);
+      const ratio = Math.max(0, Math.min(current / durationMs, 1));
+
+      if (elapsedRef.current) {
+        elapsedRef.current.textContent = formatTrackTime(current);
+      }
+
+      if (barRef.current) {
+        barRef.current.style.transform = `scaleX(${ratio})`;
+      }
+    };
+
+    const start = () => {
+      clearInterval(interval);
+      update();
+      if (isPlaying && document.visibilityState === 'visible') {
+        interval = window.setInterval(update, 1000);
+      }
+    };
+
+    start();
+    document.addEventListener('visibilitychange', start);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', start);
+    };
+  }, [durationMs, isPlaying, progressMs, progressUpdatedAt]);
+
+  return (
+    <div className="flex items-center gap-1 mt-1">
+      <span ref={elapsedRef} className="text-[9px] text-gray-500 w-6 text-right">
+        {formatTrackTime(progressMs)}
+      </span>
+      <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+        <div
+          ref={barRef}
+          className="h-full origin-left rounded-full bg-green-500 transition-transform duration-1000 ease-linear"
+          style={{ transform: `scaleX(${Math.max(0, Math.min(progressMs / durationMs, 1))})` }}
+        />
+      </div>
+      <span className="text-[9px] text-gray-500 w-6">
+        {formatTrackTime(durationMs)}
+      </span>
+    </div>
+  );
+}
+
+export default function About() {
+  const t = useTranslations('About');
+  const locale = useLocale();
+  const { canUseAmbientMotion } = usePerformanceMode();
 
   // Switchable card state (0 = GitHub, 1 = Spotify, 2 = Calendar)
   const [activeInfoCard, setActiveInfoCard] = useState(0);
@@ -84,9 +158,10 @@ export default function About() {
 
         {/* 1. Profile Photo (1 Col) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={canUseAmbientMotion ? { opacity: 0, scale: 0.97 } : false}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.42, ease: 'easeOut' }}
           onMouseEnter={() => setIsExpanded(true)}
           onMouseLeave={() => setIsExpanded(false)}
           className="md:col-span-1 relative rounded-3xl overflow-hidden min-h-[380px] md:min-h-[340px] group border border-white/5 order-1 cursor-pointer"
@@ -112,9 +187,10 @@ export default function About() {
 
         {/* 2. Bio & Stats (2 Cols) */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={canUseAmbientMotion ? { opacity: 0, y: 16 } : false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.42, ease: 'easeOut' }}
           className="md:col-span-2 bg-[#111] border border-white/5 p-4 rounded-3xl flex flex-col gap-4 group hover:border-white/10 transition-colors h-fit order-2"
         >
           <div>
@@ -184,9 +260,10 @@ export default function About() {
 
         {/* 3. Extended Tech Stack (2 Cols) */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={canUseAmbientMotion ? { opacity: 0, y: 16 } : false}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.42, ease: 'easeOut' }}
           className={`grid-tech md:col-span-2 bg-[#111] border border-white/5 p-6 rounded-3xl flex flex-col gap-4 group hover:border-white/10 transition-colors ${isExpanded ? 'order-3' : 'order-4'}`}
         >
           <div className="flex items-center justify-between">
@@ -215,9 +292,10 @@ export default function About() {
         <div className={`md:col-span-1 flex flex-col gap-3 ${isExpanded ? 'order-4' : 'order-3'}`}>
           {/* Location Card */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={canUseAmbientMotion ? { opacity: 0, x: 16 } : false}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.42, ease: 'easeOut' }}
             className="bg-[#111] border border-white/5 p-4 rounded-3xl flex flex-col gap-3 group hover:border-white/10 transition-colors"
           >
             {/* Location Header with Pulsing Dot */}
@@ -236,7 +314,7 @@ export default function About() {
               {/* Live Local Time */}
               <div className="p-2 rounded-lg bg-white/5 text-xs text-white font-mono flex items-center gap-1.5">
                 <Clock className="w-3 h-3 text-accent" />
-                {budapestTime || '--:--'}
+                <BudapestClock />
               </div>
             </div>
 
@@ -262,9 +340,10 @@ export default function About() {
 
           {/* Switchable Info Card */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={canUseAmbientMotion ? { opacity: 0, y: 10 } : false}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.38, ease: 'easeOut' }}
             className="hidden md:flex md:flex-col bg-[#111] border border-white/5 px-4 py-2 rounded-2xl group/card hover:border-white/10 transition-colors h-[87px] relative overflow-hidden"
           >
             {/* Navigation Arrows - appear on hover */}
@@ -350,20 +429,12 @@ export default function About() {
                       <p className="text-gray-500 text-[10px] truncate">{spotifyData.artist}</p>
                     )}
                     {spotifyData.progressMs !== null && spotifyData.durationMs && (
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-[9px] text-gray-500 w-6 text-right">
-                          {Math.floor(spotifyData.progressMs / 60000)}:{String(Math.floor((spotifyData.progressMs % 60000) / 1000)).padStart(2, '0')}
-                        </span>
-                        <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-green-500 rounded-full transition-all duration-100 ease-linear"
-                            style={{ width: `${(spotifyData.progressMs / spotifyData.durationMs) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-[9px] text-gray-500 w-6">
-                          {Math.floor(spotifyData.durationMs / 60000)}:{String(Math.floor((spotifyData.durationMs % 60000) / 1000)).padStart(2, '0')}
-                        </span>
-                      </div>
+                      <SpotifyProgress
+                        isPlaying={spotifyData.isPlaying}
+                        progressMs={spotifyData.progressMs}
+                        durationMs={spotifyData.durationMs}
+                        progressUpdatedAt={spotifyData.progressUpdatedAt}
+                      />
                     )}
                   </div>
                 </div>

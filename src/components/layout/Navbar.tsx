@@ -2,21 +2,24 @@
 
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
 
 export default function Navbar() {
   const t = useTranslations('Nav');
+  const { canUseSmoothScroll, canUseAmbientMotion } = usePerformanceMode();
   const [hidden, setHidden] = useState(false);
+  const hiddenRef = useRef(false);
   const { scrollY } = useScroll();
   const { scrollYProgress } = useScroll();
   
   // Smart Scroll Logic
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
-    if (latest > previous && latest > 150) {
-      setHidden(true);
-    } else {
-      setHidden(false);
+    const nextHidden = Boolean(canUseAmbientMotion && latest > previous && latest > 150);
+    if (nextHidden !== hiddenRef.current) {
+      hiddenRef.current = nextHidden;
+      setHidden(nextHidden);
     }
   });
 
@@ -33,7 +36,7 @@ export default function Navbar() {
       // Offset for fixed header if needed
       const yOffset = -50; 
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      window.scrollTo({ top: y, behavior: canUseSmoothScroll ? 'smooth' : 'auto' });
     }
   };
 
@@ -45,7 +48,7 @@ export default function Navbar() {
           hidden: { y: "-110%" },
         }}
         animate={hidden ? "hidden" : "visible"}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
+        transition={{ duration: canUseAmbientMotion ? 0.28 : 0, ease: "easeInOut" }}
         className="fixed top-0 left-0 right-0 z-50 flex justify-center py-6 pointer-events-none"
       >
         <div className="pointer-events-auto mx-4 flex max-w-[calc(100vw-2rem)] items-center justify-center gap-2 overflow-x-auto rounded-full border border-white/5 bg-black/50 px-3 py-3 shadow-lg backdrop-blur-xl sm:gap-8 sm:px-8">

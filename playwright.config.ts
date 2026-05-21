@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const testPort = process.env.PORTFOLIO_TEST_PORT || process.env.PORT || '3000';
+const testPort = process.env.PORTFOLIO_TEST_PORT || process.env.PORT || '3210';
 const baseURL = `http://localhost:${testPort}`;
 
 export default defineConfig({
@@ -39,6 +39,6 @@ export default defineConfig({
   webServer: {
     command: `npm run start -- -p ${testPort}`,
     url: baseURL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
 });

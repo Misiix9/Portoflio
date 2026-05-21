@@ -43,6 +43,41 @@ test('contact form reports missing email configuration safely', async ({ page })
   await expect(page.getByText('Email is not configured yet')).toBeVisible();
 });
 
+test('reduced-motion mode disables heavy visual effects', async ({ page }) => {
+  await page.goto('/en');
+
+  await expect.poll(
+    () => page.evaluate(() => document.documentElement.dataset.performanceMode),
+  ).toBe('lite');
+
+  const performanceState = await page.evaluate(() => ({
+    cursorEffects: document.documentElement.dataset.cursorEffects,
+    canvasCount: document.querySelectorAll('canvas').length,
+    lenisMounted: document.documentElement.classList.contains('lenis'),
+    neuralCursorMounted: Boolean(document.querySelector('svg[aria-hidden="true"].fixed')),
+  }));
+
+  expect(performanceState).toEqual({
+    cursorEffects: 'false',
+    canvasCount: 0,
+    lenisMounted: false,
+    neuralCursorMounted: false,
+  });
+});
+
+test('hidden game still opens on demand', async ({ page }) => {
+  await page.goto('/en');
+  await expect(page.getByRole('button', { name: /mute sound|unmute sound/i })).toBeVisible();
+
+  for (const key of ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA']) {
+    await page.keyboard.press(key);
+  }
+
+  await expect(page.getByText('SYSTEM BREACH DETECTED')).toBeVisible();
+  await page.getByRole('button', { name: 'INITIALIZE DEFENSE' }).click();
+  await expect(page.getByText('Score:')).toBeVisible();
+});
+
 test('mobile layout keeps core content visible', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/hu');

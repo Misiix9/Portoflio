@@ -25,11 +25,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide the native cursor only when the custom cursor is active. */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  *, *::before, *::after {
-    cursor: none !important;
-  }
+/* Hide the native cursor only while the adaptive custom cursor is mounted. */
+html[data-cursor-effects="true"] body,
+html[data-cursor-effects="true"] a,
+html[data-cursor-effects="true"] button,
+html[data-cursor-effects="true"] .magnetic-target {
+  cursor: none !important;
+}
+
+html[data-cursor-effects="true"] input,
+html[data-cursor-effects="true"] textarea,
+html[data-cursor-effects="true"] select,
+html[data-cursor-effects="true"] label {
+  cursor: auto !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -39,6 +47,32 @@ body {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+main > section:not(#hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
+}
+
+html[data-performance-mode="lite"] .backdrop-blur-sm,
+html[data-performance-mode="lite"] .backdrop-blur-md,
+html[data-performance-mode="lite"] .backdrop-blur-xl {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-performance-mode="lite"] .mix-blend-difference {
+  mix-blend-mode: normal !important;
+}
+
+html[data-performance-mode="lite"] [class*="blur-3xl"] {
+  filter: blur(24px) !important;
+}
+
+html[data-performance-mode="lite"] [class*="drop-shadow"],
+html[data-performance-mode="lite"] [class*="shadow-["] {
+  filter: none !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28) !important;
 }
 
 /* Custom Scrollbar */

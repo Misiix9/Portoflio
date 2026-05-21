@@ -1,136 +1,151 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
+
+interface CursorTarget {
+  x: number;
+  y: number;
+}
+
+const MAX_LINES = 5;
+const PROXIMITY = 145;
 
 export default function NeuralCursor() {
-  const shouldReduceMotion = useReducedMotion();
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isPointer, setIsPointer] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
-  
-  // Store nearby targets for lines
-  const [targets, setTargets] = useState<{x: number, y: number, key: string}[]>([]);
-
-  // Cache specific target locations to avoid layout thrashing
-  const targetsRef = useRef<{x: number, y: number, key: string}[]>([]); 
+  const { canUsePointerEffects } = usePerformanceMode();
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
-    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const update = () => setIsEnabled(query.matches && !shouldReduceMotion);
-    update();
-    query.addEventListener('change', update);
-    return () => query.removeEventListener('change', update);
-  }, [shouldReduceMotion]);
+    if (!canUsePointerEffects) return;
 
-  useEffect(() => {
-    if (!isEnabled) return;
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    let isPointer = false;
+    let isClicking = false;
+    let frame = 0;
+    let scanFrame = 0;
+    let targets: CursorTarget[] = [];
+
+    const lineEls = Array.from({ length: MAX_LINES }, () => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('stroke', 'rgba(86, 2, 10, 0.32)');
+      line.setAttribute('stroke-width', '1');
+      line.setAttribute('vector-effect', 'non-scaling-stroke');
+      line.style.display = 'none';
+      svgRef.current?.appendChild(line);
+      return line;
+    });
 
     const scanElements = () => {
-      const els = document.querySelectorAll('a, button, .magnetic-target');
-      const newTargets: {x: number, y: number, key: string}[] = [];
-      
-      els.forEach((el, index) => {
-        const rect = el.getBoundingClientRect();
-        newTargets.push({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-          key: `target-${index}`
+      targets = Array.from(document.querySelectorAll<HTMLElement>('a, button, .magnetic-target'))
+        .slice(0, 90)
+        .map((el) => {
+          const rect = el.getBoundingClientRect();
+          return {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2,
+          };
         });
-      });
-      targetsRef.current = newTargets;
     };
 
-    // Scan initially and on resize/scroll
+    const scheduleScan = () => {
+      cancelAnimationFrame(scanFrame);
+      scanFrame = requestAnimationFrame(scanElements);
+    };
+
+    const render = () => {
+      const dot = dotRef.current;
+      const ring = ringRef.current;
+      if (dot && ring) {
+        dot.style.transform = `translate3d(${x - 4}px, ${y - 4}px, 0) scale(${isClicking ? 0.8 : 1})`;
+
+        const ringSize = isPointer ? 60 : 40;
+        ring.style.width = `${ringSize}px`;
+        ring.style.height = `${ringSize}px`;
+        ring.style.backgroundColor = isPointer ? 'rgba(255,255,255,0.05)' : 'transparent';
+        ring.style.transform = `translate3d(${x - ringSize / 2}px, ${y - ringSize / 2}px, 0)`;
+      }
+
+      let lineIndex = 0;
+      for (const target of targets) {
+        if (lineIndex >= MAX_LINES) break;
+        const distance = Math.hypot(x - target.x, y - target.y);
+        if (distance < PROXIMITY) {
+          const line = lineEls[lineIndex];
+          line.style.display = 'block';
+          line.setAttribute('x1', String(x));
+          line.setAttribute('y1', String(y));
+          line.setAttribute('x2', String(target.x));
+          line.setAttribute('y2', String(target.y));
+          lineIndex += 1;
+        }
+      }
+
+      for (let i = lineIndex; i < lineEls.length; i++) {
+        lineEls[i].style.display = 'none';
+      }
+
+      frame = requestAnimationFrame(render);
+    };
+
+    const updatePosition = (event: PointerEvent) => {
+      x = event.clientX;
+      y = event.clientY;
+      const target = event.target as HTMLElement | null;
+      isPointer = Boolean(target?.closest('a, button, .magnetic-target'));
+    };
+
+    const handlePointerDown = () => {
+      isClicking = true;
+    };
+
+    const handlePointerUp = () => {
+      isClicking = false;
+    };
+
     scanElements();
-    const interval = setInterval(scanElements, 2000); 
+    frame = requestAnimationFrame(render);
+    const scanInterval = window.setInterval(scanElements, 2500);
 
-    const updatePosition = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      setPosition({ x: clientX, y: clientY });
-            
-            const target = e.target as HTMLElement;
-            // Quick check for pointer - using computed style is still heavy, maybe simplify?
-            // For now, tagName check is fast. fallback to computed style only if needed.
-            const isClickable = target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('a') !== null || target.closest('button') !== null;
-            setIsPointer(isClickable);
-
-            // Proximity check using CACHED coords
-            const proximity = 150;
-            const closeTargets: {x: number, y: number, key: string}[] = [];
-
-            targetsRef.current.forEach((t) => {
-                const dist = Math.hypot(clientX - t.x, clientY - t.y);
-                if (dist < proximity) {
-                    closeTargets.push(t);
-                }
-            });
-            setTargets(closeTargets);
-        };
-
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
-
-    window.addEventListener('mousemove', updatePosition);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('resize', scanElements);
+    window.addEventListener('pointermove', updatePosition, { passive: true });
+    window.addEventListener('pointerdown', handlePointerDown, { passive: true });
+    window.addEventListener('pointerup', handlePointerUp, { passive: true });
+    window.addEventListener('resize', scheduleScan, { passive: true });
+    window.addEventListener('scroll', scheduleScan, { passive: true });
 
     return () => {
-      window.removeEventListener('mousemove', updatePosition);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('resize', scanElements);
-      clearInterval(interval);
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(scanFrame);
+      clearInterval(scanInterval);
+      window.removeEventListener('pointermove', updatePosition);
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('resize', scheduleScan);
+      window.removeEventListener('scroll', scheduleScan);
+      lineEls.forEach((line) => line.remove());
     };
-  }, [isEnabled]);
+  }, [canUsePointerEffects]);
 
-  if (!isEnabled) {
+  if (!canUsePointerEffects) {
     return null;
   }
 
   return (
     <>
-      <style jsx global>{`
-        body { cursor: none; }
-        a, button, input, textarea { cursor: none; }
-      `}</style>
-
-      {/* Connection Lines (Neural Synapses) */}
-      <svg className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9997] overflow-visible">
-         {targets.map(target => (
-            <path
-                key={target.key}
-                d={`M ${position.x} ${position.y} L ${target.x} ${target.y}`}
-                stroke="rgba(86, 2, 10, 0.3)" 
-                strokeWidth="1"
-            />
-         ))}
-      </svg>
-      
-      {/* Main Dot */}
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
-        style={{ x: position.x, y: position.y, translateX: '-50%', translateY: '-50%' }}
-        animate={{
-          scale: isClicking ? 0.8 : 1
-        }}
+      <svg
+        ref={svgRef}
+        aria-hidden="true"
+        className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9997] overflow-visible"
       />
-
-      {/* Glowing Surround */}
-      <motion.div
-        className="fixed top-0 left-0 rounded-full border border-white/30 pointer-events-none z-[9998]"
-        style={{ x: position.x, y: position.y, translateX: '-50%', translateY: '-50%' }}
-        animate={{
-          width: isPointer ? 60 : 40,
-          height: isPointer ? 60 : 40,
-          opacity: 1,
-          backgroundColor: isPointer ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
-        }}
-        transition={{
-            type: "spring", stiffness: 300, damping: 20
-        }}
+      <div
+        ref={dotRef}
+        className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
+      />
+      <div
+        ref={ringRef}
+        className="fixed top-0 left-0 rounded-full border border-white/30 pointer-events-none z-[9998] will-change-transform"
       />
     </>
   );

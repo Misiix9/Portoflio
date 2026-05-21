@@ -1,23 +1,21 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
 import { ArrowDown, Download, Copy, Check, Github, Linkedin, Instagram, MapPin } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import Avatar3D from '@/components/ui/Avatar3D';
+import { usePerformanceMode } from '@/components/providers/PerformanceProvider';
+
+const Avatar3D = dynamic(() => import('@/components/ui/Avatar3D'), {
+  ssr: false,
+  loading: () => null,
+});
 
 export default function Hero() {
   const t = useTranslations('Hero');
-  const ref = useRef(null);
+  const { canUseAmbientMotion, canUseHeavyVisuals, mode } = usePerformanceMode();
   const [isCopied, setIsCopied] = useState(false);
-  
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText("hi@selora.dev");
@@ -26,18 +24,17 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" ref={ref} className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+    <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-accent/20 via-background to-background z-0" />
-      <Avatar3D />
+      {canUseHeavyVisuals ? <Avatar3D /> : null}
       
       {/* 3D Entrance Text */}
       <motion.div 
-        className="z-10 text-center flex flex-col items-center gap-6 mix-blend-difference"
-        style={{ y, opacity }}
-        initial={{ scale: 3, opacity: 0, filter: 'blur(20px)' }}
-        animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
-        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }} // smooth bezier
+        className={`z-10 text-center flex flex-col items-center gap-6 ${mode === 'full' ? 'mix-blend-difference' : ''}`}
+        initial={canUseAmbientMotion ? { scale: 1.08, opacity: 0, y: 18 } : false}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: mode === 'full' ? 0.9 : 0.45, ease: [0.22, 1, 0.36, 1] }}
       >
         <h1 className="text-6xl md:text-9xl font-bold tracking-tighter text-white font-lexend">
           {t('brand')}
@@ -106,7 +103,7 @@ export default function Hero() {
       {/* Floating Scroll Indicator */}
       <motion.div
         className="absolute bottom-12 z-20 text-white/50"
-        animate={{ y: [0, 10, 0] }}
+        animate={canUseAmbientMotion ? { y: [0, 10, 0] } : undefined}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         aria-label={t('scroll')}
       >

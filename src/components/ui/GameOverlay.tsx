@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Shield, Bug, Play, RotateCcw } from 'lucide-react';
 
@@ -9,12 +9,31 @@ interface GameOverlayProps {
   onClose: () => void;
 }
 
+interface FallingBug {
+  x: number;
+  y: number;
+  speed: number;
+  id: number;
+}
+
 export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef(0);
+  const spawnTimeoutRef = useRef(0);
+  const bugsRef = useRef<FallingBug[]>([]);
+  const nextIdRef = useRef(0);
+  const scoreRef = useRef(0);
+  const canvasSizeRef = useRef({ width: 0, height: 0 });
+  const lastFrameRef = useRef(0);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [highScore, setHighScore] = useState(0);
+
+  const endGame = useCallback(() => {
+    setGameOver(true);
+    setHighScore((currentHighScore) => Math.max(currentHighScore, scoreRef.current));
+  }, []);
 
   // Game loop logic
   useEffect(() => {
@@ -25,43 +44,50 @@ export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
-    
-    // Game state
-    let bugs: { x: number; y: number; speed: number; id: number }[] = [];
-    let nextId = 0;
-    let spawnRate = 1000;
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      canvasSizeRef.current = { width, height };
     };
     resize();
     window.addEventListener('resize', resize);
 
     const spawnBug = () => {
-       const x = Math.random() * (canvas.width - 40) + 20;
-       bugs.push({
+       const { width } = canvasSizeRef.current;
+       const x = Math.random() * Math.max(width - 40, 1) + 20;
+       bugsRef.current.push({
          x,
          y: -50,
-         speed: 2 + Math.random() * 3 + (score / 10), // Difficulty ramps up
-         id: nextId++
+         speed: 120 + Math.random() * 130 + scoreRef.current * 8,
+         id: nextIdRef.current++
        });
-       spawnRate = Math.max(200, 1000 - score * 20);
     };
 
-    const spawnInterval = setInterval(spawnBug, spawnRate);
+    const scheduleSpawn = () => {
+      spawnBug();
+      const spawnRate = Math.max(220, 1000 - scoreRef.current * 24);
+      spawnTimeoutRef.current = window.setTimeout(scheduleSpawn, spawnRate);
+    };
 
-    const update = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw standard connection lines (matrix style)
+    const update = (time: number) => {
+      const { width, height } = canvasSizeRef.current;
+      const delta = lastFrameRef.current ? Math.min((time - lastFrameRef.current) / 1000, 0.05) : 0.016;
+      lastFrameRef.current = time;
+      ctx.clearRect(0, 0, width, height);
       ctx.strokeStyle = '#22c55e33';
       ctx.lineWidth = 1;
 
       // Update and draw bugs
+      const bugs = bugsRef.current;
       for (let i = bugs.length - 1; i >= 0; i--) {
         const bug = bugs[i];
-        bug.y += bug.speed;
+        bug.y += bug.speed * delta;
 
         // Draw bug (Red square or custom shape)
         ctx.fillStyle = '#ef4444';
@@ -73,35 +99,38 @@ export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
         ctx.shadowBlur = 0;
         
         // Game Over condition
-        if (bug.y > canvas.height) {
-          setGameOver(true);
-          setHighScore((currentHighScore) => Math.max(currentHighScore, score));
+        if (bug.y > height) {
+          endGame();
+          return;
         }
       }
 
-      animationFrameId = requestAnimationFrame(update);
+      animationFrameRef.current = requestAnimationFrame(update);
     };
 
-    animationFrameId = requestAnimationFrame(update);
-
-    // Initial spawn
-    spawnBug();
+    scheduleSpawn();
+    animationFrameRef.current = requestAnimationFrame(update);
 
     // Click handler to destroy bugs
     const handleClick = (e: MouseEvent) => {
         const rect = canvas.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const clickY = e.clientY - rect.top;
+        let gained = 0;
 
-        bugs = bugs.filter(bug => {
+        bugsRef.current = bugsRef.current.filter(bug => {
             const dist = Math.sqrt(Math.pow(clickX - bug.x, 2) + Math.pow(clickY - bug.y, 2));
             if (dist < 40) { // Hit radius
-                setScore(s => s + 1);
-                // Particle explosion effect could go here
+                gained += 1;
                 return false;
             }
             return true;
         });
+
+        if (gained > 0) {
+          scoreRef.current += gained;
+          setScore(scoreRef.current);
+        }
     };
 
     canvas.addEventListener('click', handleClick);
@@ -109,14 +138,18 @@ export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
     return () => {
       window.removeEventListener('resize', resize);
       canvas.removeEventListener('click', handleClick);
-      cancelAnimationFrame(animationFrameId);
-      clearInterval(spawnInterval);
-      // Clean up intervals if they were dynamic (recurse)
+      cancelAnimationFrame(animationFrameRef.current);
+      clearTimeout(spawnTimeoutRef.current);
+      lastFrameRef.current = 0;
     };
-  }, [isOpen, gameStarted, gameOver, score]);
+  }, [endGame, gameOver, gameStarted, isOpen]);
 
   // Reset game
   const startGame = () => {
+    bugsRef.current = [];
+    nextIdRef.current = 0;
+    scoreRef.current = 0;
+    lastFrameRef.current = 0;
     setScore(0);
     setGameOver(false);
     setGameStarted(true);

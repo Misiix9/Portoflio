@@ -78,11 +78,21 @@ export function useNextAvailability({
       });
     };
 
+    const refresh = () => {
+      if (document.visibilityState === 'visible') {
+        calculateNextAvailable();
+      }
+    };
+
     calculateNextAvailable();
     
     // Update every minute
-    const interval = setInterval(calculateNextAvailable, 60 * 1000);
-    return () => clearInterval(interval);
+    const interval = window.setInterval(refresh, 60 * 1000);
+    document.addEventListener('visibilitychange', refresh);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', refresh);
+    };
   }, [locale, todayLabel, tomorrowLabel]);
 
   return data;
