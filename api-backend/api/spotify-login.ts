@@ -1,8 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const REDIRECT_URI = process.env.VERCEL_URL 
-  ? `https://${process.env.VERCEL_URL}/api/spotify-callback`
-  : 'http://localhost:3000/api/spotify-callback';
+const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI || (
+  process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}/api/spotify-callback`
+    : 'http://localhost:3000/api/spotify-callback'
+);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const clientId = process.env.SPOTIFY_CLIENT_ID;

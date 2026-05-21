@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import useSound from 'use-sound';
 
 interface SoundContextType {
@@ -12,12 +12,8 @@ interface SoundContextType {
 
 const SoundContext = createContext<SoundContextType | undefined>(undefined);
 
-// Short placeholder sounds (base64 or URLs would ideally be used here).
-// For now, we'll try to use a simple online URL if possible, or just setup the structure.
-// NOTE: use-sound requires actual audio files. 
-// I will use a placeholder URL for a "pop" sound.
 // Local sound files
-const HOVER_SOUND = 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3'; // Keep hover as is for now
+const HOVER_SOUND = '/sounds/click.mp3';
 const CLICK_SOUND = '/sounds/click.mp3'; // User provided file
 
 export function SoundProvider({ children }: { children: ReactNode }) {
@@ -26,16 +22,16 @@ export function SoundProvider({ children }: { children: ReactNode }) {
   const [playHoverSfx] = useSound(HOVER_SOUND, { volume: 0.1, soundEnabled: !isMuted });
   const [playClickSfx] = useSound(CLICK_SOUND, { volume: 0.1, soundEnabled: !isMuted });
 
-  const playClick = () => {
+  const playClick = useCallback(() => {
     if (!isMuted) {
       // Small random pitch variation for realism
       playClickSfx({ playbackRate: 0.95 + Math.random() * 0.1 });
     }
-  };
+  }, [isMuted, playClickSfx]);
 
-  const playHover = () => {
+  const playHover = useCallback(() => {
     if (!isMuted) playHoverSfx();
-  };
+  }, [isMuted, playHoverSfx]);
 
   // Global Click Listener
   useEffect(() => {
@@ -47,9 +43,9 @@ export function SoundProvider({ children }: { children: ReactNode }) {
     return () => {
       window.removeEventListener('click', handleGlobalClick);
     };
-  }, [isMuted, playClickSfx]); // Re-bind if mute state changes or recreate listener
+  }, [playClick]);
 
-  const toggleMute = () => setIsMuted(!isMuted);
+  const toggleMute = useCallback(() => setIsMuted((current) => !current), []);
 
   return (
     <SoundContext.Provider value={{ isMuted, toggleMute, playHover, playClick }}>

@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useRef, useState } from 'react';
 import { Icosahedron, Float } from '@react-three/drei';
 import * as THREE from 'three';
+import { useReducedMotion } from 'framer-motion';
 
 function DigitalHead() {
   const ref = useRef<THREE.Mesh>(null!);
@@ -50,9 +51,15 @@ function DigitalHead() {
 }
 
 export default function Avatar3D() {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) {
+    return null;
+  }
+
   return (
     <div className="w-full h-full absolute inset-0 pointer-events-none z-0">
-      <Canvas camera={{ position: [0, 0, 5] }} gl={{ alpha: true }}>
+      <Canvas camera={{ position: [0, 0, 5] }} gl={{ alpha: true }} dpr={[1, 1.5]}>
         <ambientLight intensity={1} />
         <pointLight position={[10, 10, 10]} intensity={5} />
         <DigitalHead />

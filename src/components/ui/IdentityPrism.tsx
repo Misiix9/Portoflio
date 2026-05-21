@@ -1,10 +1,9 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { MeshTransmissionMaterial, Text, Float, Center, shaderMaterial } from '@react-three/drei';
+import { MeshTransmissionMaterial, Float, Center } from '@react-three/drei';
 import * as THREE from 'three';
-import { useMotionValue, useSpring } from 'framer-motion';
 
 // A custom geometry or just a simple Cylinder with low radial segments helps mimic a prism
 // Prism: Cylinder with 3 radial segments
@@ -67,22 +66,6 @@ function Prism({ onHover }: { onHover: (hover: boolean) => void }) {
         </Center>
     </group>
   );
-}
-
-function InnerText() {
-    return (
-        <Center>
-            <Text
-                font="/fonts/Lexend-Bold.ttf" // We might need to handle font loading
-                fontSize={0.5}
-                color="white"
-                anchorX="center"
-                anchorY="middle"
-            >
-                IDENTITY
-            </Text>
-        </Center>
-    )
 }
 
 export default function IdentityPrism() {

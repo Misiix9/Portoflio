@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export default function NeuralCursor() {
+  const shouldReduceMotion = useReducedMotion();
+  const [isEnabled, setIsEnabled] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
@@ -15,6 +17,16 @@ export default function NeuralCursor() {
   const targetsRef = useRef<{x: number, y: number, key: string}[]>([]); 
 
   useEffect(() => {
+    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => setIsEnabled(query.matches && !shouldReduceMotion);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, [shouldReduceMotion]);
+
+  useEffect(() => {
+    if (!isEnabled) return;
+
     const scanElements = () => {
       const els = document.querySelectorAll('a, button, .magnetic-target');
       const newTargets: {x: number, y: number, key: string}[] = [];
@@ -72,7 +84,11 @@ export default function NeuralCursor() {
       window.removeEventListener('resize', scanElements);
       clearInterval(interval);
     };
-  }, []);
+  }, [isEnabled]);
+
+  if (!isEnabled) {
+    return null;
+  }
 
   return (
     <>

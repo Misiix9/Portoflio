@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface SpotifyPlayback {
   isPlaying: boolean;
@@ -31,29 +31,22 @@ export function useSpotifyPlayback() {
     error: null,
   });
 
-  const progressRef = useRef<number | null>(null);
-  const lastFetchTimeRef = useRef<number>(Date.now());
-
   const fetchData = useCallback(async () => {
-    // If no API URL is set, use fallback data
+    // If no API URL is set, expose a clean empty state instead of fake activity.
     if (!API_URL) {
-      const now = Date.now();
-      const elapsed = now - lastFetchTimeRef.current;
-      lastFetchTimeRef.current = now;
-      
-      setData(prev => ({
-        isPlaying: true,
-        track: 'Blinding Lights',
-        artist: 'The Weeknd',
-        album: 'After Hours',
+      setData({
+        isPlaying: false,
+        track: null,
+        artist: null,
+        album: null,
         albumArt: null,
         url: null,
         uri: null,
-        progressMs: Math.min((prev.progressMs || 0) + elapsed, 200000),
-        durationMs: 200000,
+        progressMs: null,
+        durationMs: null,
         isLoading: false,
-        error: null,
-      }));
+        error: 'API URL not configured',
+      });
       return;
     }
 
@@ -62,8 +55,6 @@ export function useSpotifyPlayback() {
       if (!response.ok) throw new Error('Failed to fetch');
       
       const result = await response.json();
-      progressRef.current = result.progressMs;
-      lastFetchTimeRef.current = Date.now();
       
       setData({
         isPlaying: result.isPlaying,
@@ -82,7 +73,7 @@ export function useSpotifyPlayback() {
       console.error('Spotify fetch error:', err);
       setData({
         isPlaying: false,
-        track: 'Not connected',
+        track: null,
         artist: null,
         album: null,
         albumArt: null,
@@ -103,9 +94,11 @@ export function useSpotifyPlayback() {
     return () => clearInterval(refreshInterval);
   }, [fetchData]);
 
-  // Live progress update every second when playing
+  const hasTrackProgress = data.progressMs !== null && data.durationMs !== null;
+
+  // Live progress update when playing.
   useEffect(() => {
-    if (!data.isPlaying || data.progressMs === null || data.durationMs === null) {
+    if (!data.isPlaying || !hasTrackProgress) {
       return;
     }
 
@@ -131,7 +124,7 @@ export function useSpotifyPlayback() {
     }, 100);
 
     return () => clearInterval(progressInterval);
-  }, [data.isPlaying, data.track, fetchData]);
+  }, [data.isPlaying, data.track, hasTrackProgress, fetchData]);
 
   return data;
 }

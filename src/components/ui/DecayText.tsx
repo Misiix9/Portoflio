@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
 export default function DecayText({ text, className = "", highlightWords = [] }: { text: string, className?: string, highlightWords?: string[] }) {
   // OPTIMIZATION: Removed scroll-linked animation. It was causing severe lag due to 
@@ -9,7 +9,7 @@ export default function DecayText({ text, className = "", highlightWords = [] }:
 
   const words = text.split(" ");
   
-  const container: any = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     visible: (i: number = 1) => ({
       opacity: 1,
@@ -17,7 +17,7 @@ export default function DecayText({ text, className = "", highlightWords = [] }:
     }),
   };
 
-  const child: any = {
+  const child: Variants = {
     visible: {
       opacity: 1,
       y: 0,
@@ -44,7 +44,8 @@ export default function DecayText({ text, className = "", highlightWords = [] }:
         viewport={{ once: true, margin: "-100px" }}
     >
       {words.map((word, wIndex) => {
-        const isHighlighted = highlightWords.includes(word.replace(/[^a-zA-Z]/g, "")); 
+        const normalizedWord = word.replace(/[^\p{L}\p{N}]/gu, "");
+        const isHighlighted = highlightWords.includes(normalizedWord);
         
         return (
             <span key={wIndex} className={`flex ${isHighlighted ? 'text-accent' : ''}`}>

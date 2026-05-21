@@ -1,222 +1,170 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useVelocity, useAnimationFrame } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import DecayText from '@/components/ui/DecayText';
+import { showcaseItems, type ShowcaseFilter, type ShowcaseItem } from '@/data/showcase';
 
-const projects = [
-  {
-    title: "Footify Landing Page",
-    category: "Full Stack",
-    image: "/images/landing.png",
-    description: "A landing page for our football statistics app.",
-    year: "2024",
-    link: "https://footify.hu",
-    fit: "contain"
-  },
-  {
-    title: "Footify App",
-    category: "Full Stack",
-    image: "/images/footifyApp.png",
-    description: "A mobile- and web app for football statistics.",
-    year: "2024",
-    link: "https://github.com/gaspardani87/Footify",
-    fit: "contain",
-    cardBg: "bg-black"
-  },
-  {
-    title: "ELTE University",
-    category: "Study",
-    image: "/images/elteLogo.png",
-    description: "BSc in Computer Science, Specializing in Software Engineering",
-    year: "2025-Now",
-    link: "https://elte.hu"
-  },
-  {
-    title: "DAM Invisible Technology",
-    category: "Work",
-    image: "/images/dam_office.jpg",
-    description: "Service Desk Agent",
-    year: "2026-Present",
-    link: "https://damit.hu"
-  },
-  {
-    title: "Petőfi Sándor Technical School, Aszod",
-    category: "Study",
-    image: "/images/placeholders/study_thumb_bme.png",
-    description: "Specialize in Software Development and Testing",
-    year: "2020-2025",
-    link: "https://vac-petofi.www.intezmeny.edir.hu/"
-  }
-];
+const filters: ShowcaseFilter[] = ['all', 'project', 'study'];
 
-function Card({ project, index }: { project: any, index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
+function useFinePointer() {
+  const [isFinePointer, setIsFinePointer] = useState(false);
 
-  // 1. Mouse Tilt Physics
+  useEffect(() => {
+    const query = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const update = () => setIsFinePointer(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+
+  return isFinePointer;
+}
+
+function Card({ item, enableTilt }: { item: ShowcaseItem; enableTilt: boolean }) {
+  const t = useTranslations('Showcase');
+  const ref = useRef<HTMLAnchorElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 });
-  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15 });
+  const mouseXSpring = useSpring(x, { stiffness: 140, damping: 18 });
+  const mouseYSpring = useSpring(y, { stiffness: 140, damping: 18 });
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['6deg', '-6deg']);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-6deg', '6deg']);
+  const translateX = useTransform(mouseXSpring, [-0.5, 0.5], [-5, 5]);
+  const translateY = useTransform(mouseYSpring, [-0.5, 0.5], [-5, 5]);
+  const title = t(`items.${item.id}.title`);
+  const description = t(`items.${item.id}.description`);
 
-  // Rotation
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
-
-  // Magnetic Translation (The "Pull" effect)
-  const translateX = useTransform(mouseXSpring, [-0.5, 0.5], [-10, 10]);
-  const translateY = useTransform(mouseYSpring, [-0.5, 0.5], [-10, 10]);
-
-  // 2. Parallax Zoom Physics (Scroll-linked)
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-  const scale = useTransform(scrollYProgress, [0, 1], [1.15, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!enableTilt || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = (e.clientX - rect.left) / width - 0.5;
-    const mouseY = (e.clientY - rect.top) / height - 0.5;
-    x.set(mouseX);
-    y.set(mouseY);
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
-  const handleMouseLeave = () => {
+  const resetTilt = () => {
     x.set(0);
     y.set(0);
   };
 
   return (
-    <motion.div
+    <motion.a
       ref={ref}
-      style={{ opacity }}
-      className="group/card relative w-full perspective-1000 will-change-transform"
+      href={item.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={t('open', { title })}
+      initial={{ opacity: 0, y: enableTilt ? 28 : 0 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={enableTilt ? { y: -8 } : undefined}
+      whileTap={enableTilt ? { scale: 0.985 } : undefined}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={resetTilt}
+      onBlur={resetTilt}
+      className="group/card block w-full perspective-1000 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <motion.div
-        style={{
-          rotateX,
-          rotateY,
-          x: translateX,
-          y: translateY,
-          transformStyle: "preserve-3d",
-        }}
-        className={`relative w-full aspect-[4/3] rounded-3xl overflow-hidden border border-white/5 transition-all duration-300 group-hover/card:border-accent/50 group-hover/card:shadow-2xl ${project.cardBg || 'bg-[#111]'}`}
+        style={
+          enableTilt
+            ? {
+                rotateX,
+                rotateY,
+                x: translateX,
+                y: translateY,
+                transformStyle: 'preserve-3d',
+              }
+            : undefined
+        }
+        className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.28)] transition-colors duration-300 group-hover/card:border-accent/50 ${item.imageBg}`}
       >
-        {/* Parallax Image */}
-        <div className="absolute inset-0 overflow-hidden rounded-3xl">
-          <motion.div
-            style={{ scale }}
-            className="w-full h-full"
-          >
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className={`${project.fit === 'contain' ? 'object-contain p-4' : 'object-cover'} transition-all duration-700 group-hover/card:scale-110 group-hover/card:grayscale-0 grayscale opacity-70 group-hover/card:opacity-100`}
-            />
-          </motion.div>
+        <div className="absolute inset-0">
+          <Image
+            src={item.image}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className={`${item.imageFit === 'contain' ? 'object-contain p-8' : 'object-cover'} transition duration-500 ease-out group-hover/card:scale-[1.04]`}
+          />
         </div>
 
-        {/* Content Overlay */}
-        <div className="absolute inset-0 z-10 p-8 flex flex-col justify-between bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-80 group-hover/card:opacity-100 transition-opacity">
-          <div className="flex justify-between items-start">
-            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-mono text-accent">
-              {project.category}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-black/0" />
+        <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-4 p-6 md:p-7">
+          <div className="flex items-center justify-between gap-3">
+            <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80 backdrop-blur-md">
+              {t(`kinds.${item.kind}`)}
             </span>
+            <span className="font-mono text-xs text-white/60">{item.year}</span>
           </div>
 
-          <div className="transform translate-y-4 group-hover/card:translate-y-0 transition-transform duration-300">
-            <h3 className="text-3xl font-bold text-white mb-2 flex items-center gap-2">
-              {project.title}
-              <ArrowUpRight className="w-5 h-5 text-accent opacity-0 group-hover/card:opacity-100 -translate-x-2 group-hover/card:translate-x-0 transition-all" />
+          <div>
+            <h3 className="flex items-center gap-2 text-2xl font-bold leading-tight text-white md:text-3xl">
+              {title}
+              <ArrowUpRight className="h-5 w-5 shrink-0 text-accent transition-transform duration-300 group-hover/card:translate-x-1 group-hover/card:-translate-y-1" />
             </h3>
-            <p className="text-gray-400 text-sm max-w-[90%] opacity-0 group-hover/card:opacity-100 transition-opacity delay-100">
-              {project.description}
+            <p className="mt-3 max-w-[92%] text-sm leading-relaxed text-gray-300">
+              {description}
             </p>
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.a>
   );
 }
 
 export default function MagneticGallery() {
-  const [filter, setFilter] = useState<'all' | 'PROJECT' | 'STUDY'>('all');
+  const t = useTranslations('Showcase');
+  const [filter, setFilter] = useState<ShowcaseFilter>('all');
+  const shouldReduceMotion = useReducedMotion();
+  const isFinePointer = useFinePointer();
+  const enableTilt = Boolean(isFinePointer && !shouldReduceMotion);
 
-  // 3. Velocity Skew Physics
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400
-  });
-  const skewY = useTransform(smoothVelocity, [-2000, 2000], [-5, 5]); // Subtle skew based on speed
+  const filteredProjects = useMemo(
+    () =>
+      showcaseItems.filter((item) => {
+        if (filter === 'all') return true;
+        if (filter === 'project') return item.kind !== 'study';
+        return item.kind === 'study';
+      }),
+    [filter],
+  );
 
-  const filteredProjects = projects.filter(p => {
-    if (filter === 'all') return true;
-    if (filter === 'PROJECT') return p.category !== 'Study';
-    if (filter === 'STUDY') return p.category === 'Study';
-    return true;
-  });
+  const heading = `${t('headingBefore')} ${t('headingAccent')}`;
 
   return (
-    <section ref={containerRef} className="py-32 w-full relative z-10 px-6 max-w-7xl mx-auto min-h-screen">
-      <div className="mb-24 flex flex-col md:flex-row justify-between items-end gap-6">
-        <div>
-          <DecayText
-            text="Selected Works"
-            highlightWords={["Works"]}
-            className="text-5xl md:text-8xl font-bold text-white justify-start mb-6"
-          />
-        </div>
+    <section id="projects" className="relative z-10 mx-auto min-h-screen w-full max-w-7xl px-6 py-32">
+      <div className="mb-16 flex flex-col gap-6 md:mb-20 md:flex-row md:items-end md:justify-between">
+        <DecayText
+          text={heading}
+          highlightWords={[t('headingAccent')]}
+          className="justify-start text-5xl font-bold text-white md:text-8xl"
+        />
 
-        {/* Filter Toggle */}
-        <div className="flex bg-white/5 border border-white/10 rounded-full p-1 backdrop-blur-sm">
-          {['all', 'PROJECT', 'STUDY'].map((f) => (
+        <div className="flex w-full overflow-x-auto rounded-full border border-white/10 bg-white/5 p-1 backdrop-blur-sm md:w-auto">
+          {filters.map((currentFilter) => (
             <button
-              key={f}
-              onClick={() => setFilter(f as any)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 uppercase tracking-wider ${filter === f ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}
+              key={currentFilter}
+              type="button"
+              onClick={() => setFilter(currentFilter)}
+              className={`whitespace-nowrap rounded-full px-5 py-2 text-sm font-medium uppercase tracking-wider transition-all duration-300 md:px-6 ${
+                filter === currentFilter ? 'bg-white text-black' : 'text-gray-400 hover:text-white'
+              }`}
             >
-              {f === 'all' ? 'All' : f === 'PROJECT' ? 'Dev' : 'Study'}
+              {t(`filters.${currentFilter}`)}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Grid with Focus Blur Effect */}
-      {/* "group/gallery" enables the focus blur logic: when hovering the container, unrelated items blur */}
-      <motion.div
-        style={{ skewY }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-24 group/gallery will-change-transform"
-      >
-        {filteredProjects.map((project, i) => (
-          <div
-            key={`${project.title}-${i}`}
-            className={`
-                    transition-all duration-500
-                    group-hover/gallery:blur-[2px] 
-                    group-hover/gallery:scale-[0.98] 
-                    hover:!blur-none 
-                    hover:!scale-100 
-                    hover:!z-10
-                    ${i % 2 === 1 ? 'md:translate-y-24' : ''} // Staggered Grid Layout
-                `}
-          >
-            <Card project={project} index={i} />
-          </div>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-x-12 md:gap-y-14">
+        {filteredProjects.map((item) => (
+          <Card key={item.id} item={item} enableTilt={enableTilt} />
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

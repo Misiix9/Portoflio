@@ -132,6 +132,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({
       isPlaying: false,
       track: null,
+      artist: null,
+      album: null,
+      albumArt: null,
+      url: null,
+      uri: null,
+      progressMs: null,
+      durationMs: null,
       lastUpdated: new Date().toISOString(),
     });
   } catch (error) {
@@ -140,6 +147,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       error: 'Failed to fetch Spotify data',
       isPlaying: false,
       track: null,
+      artist: null,
+      album: null,
+      albumArt: null,
+      url: null,
+      uri: null,
+      progressMs: null,
+      durationMs: null,
+      lastUpdated: new Date().toISOString(),
     });
   }
 }

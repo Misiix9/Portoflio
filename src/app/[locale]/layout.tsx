@@ -2,14 +2,11 @@ import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages, setRequestLocale } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import { SoundProvider } from "@/components/providers/SoundProvider";
-import ParticlesBackground from "@/components/ui/ParticlesBackground";
-import MuteButton from "@/components/ui/MuteButton";
-import GameWrapper from "@/components/layout/GameWrapper";
-import StoryLine from "@/components/ui/StoryLine";
-import NeuralCursor from "@/components/ui/NeuralCursor";
+import MotionProvider from "@/components/providers/MotionProvider";
+import VisualEffects from "@/components/providers/VisualEffects";
 
 const lexend = Lexend({
   subsets: ["latin"],
@@ -158,20 +155,18 @@ export default async function RootLayout({
     <html lang={locale} className={`${lexend.variable}`} suppressHydrationWarning>
       <body className="antialiased bg-background text-foreground selection:bg-accent selection:text-white" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
+          <MotionProvider>
            <SoundProvider>
              <SmoothScrollProvider>
                <script
                   type="application/ld+json"
                   dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
                />
-               <ParticlesBackground />
-               <NeuralCursor />
                {children}
-               <MuteButton />
-               <GameWrapper />
-               <StoryLine />
+               <VisualEffects />
              </SmoothScrollProvider>
            </SoundProvider>
+          </MotionProvider>
         </NextIntlClientProvider>
       </body>
     </html>

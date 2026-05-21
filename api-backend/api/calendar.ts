@@ -129,6 +129,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       hasEvent: false,
       title: null,
       time: null,
+      rawStart: null,
+      url: null,
       lastUpdated: new Date().toISOString(),
     });
   } catch (error) {
@@ -136,6 +138,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({
       error: 'Failed to fetch calendar data',
       hasEvent: false,
+      title: null,
+      time: null,
+      rawStart: null,
+      url: null,
+      lastUpdated: new Date().toISOString(),
     });
   }
 }

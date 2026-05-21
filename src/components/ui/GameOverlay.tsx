@@ -26,14 +26,11 @@ export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let spawnInterval: NodeJS.Timeout;
     
     // Game state
     let bugs: { x: number; y: number; speed: number; id: number }[] = [];
     let nextId = 0;
     let spawnRate = 1000;
-    let lastTime = 0;
-
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -52,12 +49,9 @@ export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
        spawnRate = Math.max(200, 1000 - score * 20);
     };
 
-    spawnInterval = setInterval(spawnBug, spawnRate);
+    const spawnInterval = setInterval(spawnBug, spawnRate);
 
-    const update = (time: number) => {
-      const delta = time - lastTime;
-      lastTime = time;
-
+    const update = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw standard connection lines (matrix style)
@@ -81,7 +75,7 @@ export default function GameOverlay({ isOpen, onClose }: GameOverlayProps) {
         // Game Over condition
         if (bug.y > canvas.height) {
           setGameOver(true);
-          if (score > highScore) setHighScore(score);
+          setHighScore((currentHighScore) => Math.max(currentHighScore, score));
         }
       }
 

@@ -98,8 +98,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Get last 28 days
     const last28Days = allDays.slice(-28);
     
-    // Calculate total commits for last 28 days
-    const totalCommits = last28Days.reduce((sum, day) => sum + day.contributionCount, 0);
+    // GraphQL returns contribution counts, not only pushed commits.
+    const totalContributions = last28Days.reduce((sum, day) => sum + day.contributionCount, 0);
     
     // Calculate activity levels (0-3)
     const maxContributions = Math.max(...last28Days.map(d => d.contributionCount), 1);
@@ -112,7 +112,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({
       username,
-      totalCommits,
+      metric: 'contributions',
+      totalContributions,
+      pushCommitCount: null,
+      totalCommits: totalContributions,
       levels,
       lastUpdated: new Date().toISOString(),
     });
@@ -189,6 +192,9 @@ async function fetchFromEventsAPI(username: string, res: VercelResponse) {
 
     return res.status(200).json({
       username,
+      metric: 'pushCommits',
+      totalContributions: null,
+      pushCommitCount: totalCommits,
       totalCommits,
       levels: last28Days.map((d) => d.level),
       lastUpdated: new Date().toISOString(),
@@ -197,11 +203,13 @@ async function fetchFromEventsAPI(username: string, res: VercelResponse) {
     console.error('GitHub Events API error:', error);
     return res.status(500).json({
       error: 'Failed to fetch GitHub data',
-      fallback: {
-        username,
-        totalCommits: 0,
-        levels: Array(28).fill(0),
-      },
+      username,
+      metric: 'pushCommits',
+      totalContributions: null,
+      pushCommitCount: 0,
+      totalCommits: 0,
+      levels: Array(28).fill(0),
+      lastUpdated: new Date().toISOString(),
     });
   }
 }

@@ -2,8 +2,6 @@
 
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
-import clsx from 'clsx';
 import { useState } from 'react';
 
 export default function Navbar() {
@@ -23,10 +21,10 @@ export default function Navbar() {
   });
 
   const navItems = [
-    { id: 'about', label: 'About' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'skills', label: 'Skills' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'about', label: t('about') },
+    { id: 'projects', label: t('projects') },
+    { id: 'skills', label: t('skills') },
+    { id: 'contact', label: t('contact') },
   ];
 
   const scrollTo = (id: string) => {
@@ -50,12 +48,12 @@ export default function Navbar() {
         transition={{ duration: 0.35, ease: "easeInOut" }}
         className="fixed top-0 left-0 right-0 z-50 flex justify-center py-6 pointer-events-none"
       >
-        <div className="pointer-events-auto px-8 py-3 rounded-full border border-white/5 bg-black/50 backdrop-blur-xl shadow-lg flex items-center gap-8">
+        <div className="pointer-events-auto mx-4 flex max-w-[calc(100vw-2rem)] items-center justify-center gap-2 overflow-x-auto rounded-full border border-white/5 bg-black/50 px-3 py-3 shadow-lg backdrop-blur-xl sm:gap-8 sm:px-8">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="text-sm font-medium text-gray-400 hover:text-white transition-colors uppercase tracking-widest relative group"
+              className="relative whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.14em] text-gray-400 transition-colors hover:text-white sm:text-sm sm:tracking-widest group"
             >
               {item.label}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-accent transition-all duration-300 group-hover:w-full" />

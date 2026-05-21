@@ -3,9 +3,11 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDown, Download, Copy, Check, Github, Linkedin, Instagram, MapPin } from 'lucide-react';
 import { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import Avatar3D from '@/components/ui/Avatar3D';
 
 export default function Hero() {
+  const t = useTranslations('Hero');
   const ref = useRef(null);
   const [isCopied, setIsCopied] = useState(false);
   
@@ -38,20 +40,22 @@ export default function Hero() {
         transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }} // smooth bezier
       >
         <h1 className="text-6xl md:text-9xl font-bold tracking-tighter text-white font-lexend">
-          SELORA
+          {t('brand')}
         </h1>
         <div className="w-24 h-1 bg-accent rounded-full mb-4" />
-        <h2 className="text-xl md:text-3xl font-light text-gray-300 tracking-widest uppercase font-lexend">
-          MIHÁLY GYŐRI
-          <h3 className="text-sm font-medium text-gray-400">Full Stack Engineer</h3>
-        </h2>
+        <div className="font-lexend uppercase">
+          <p className="text-xl font-light tracking-widest text-gray-300 md:text-3xl">
+            {t('name')}
+          </p>
+          <p className="mt-2 text-sm font-medium normal-case text-gray-400">{t('role')}</p>
+        </div>
         
         <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             <div className="relative">
                                 <MapPin className="w-4 h-4 text-accent" />
                             </div>
-                            <h4 className="text-white font-bold text-sm">Budapest, Hungary 🇭🇺</h4>
+                            <p className="text-white font-bold text-sm">{t('location')}</p>
                         </div>
                    </div>
 
@@ -71,27 +75,27 @@ export default function Hero() {
                     download
                     className="flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition-colors"
                  >
-                     <Download size={18} /> Resume
+                     <Download size={18} /> {t('resume')}
                  </a>
                  <button 
                     onClick={handleCopy}
                     className="flex items-center gap-2 px-6 py-3 rounded-lg bg-white/10 border border-white/20 text-white font-medium hover:bg-white/20 transition-all backdrop-blur-sm"
                  >
                      {isCopied ? <Check size={18} className="text-green-400" /> : <Copy size={18} />}
-                     {isCopied ? "Copied!" : "Copy Email"}
+                     {isCopied ? t('copied') : t('copyEmail')}
                  </button>
              </div>
                     
 
              {/* Socials (Mini) */}
              <div className="flex items-center gap-6 text-gray-400">
-                 <a href="https://github.com/Misiix9" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                 <a href="https://github.com/Misiix9" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label={t('github')}>
                      <Github size={24} />
                  </a>
-                 <a href="https://www.linkedin.com/in/gy%C5%91ri-mih%C3%A1ly-7161102bb/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                 <a href="https://www.linkedin.com/in/gy%C5%91ri-mih%C3%A1ly-7161102bb/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label={t('linkedin')}>
                      <Linkedin size={24} />
                  </a>
-                 <a href="https://instagram.com/gyr.misi" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                 <a href="https://instagram.com/gyr.misi" target="_blank" rel="noreferrer" className="hover:text-white transition-colors" aria-label={t('instagram')}>
                      <Instagram size={24} />
                  </a>
              </div>
@@ -104,6 +108,7 @@ export default function Hero() {
         className="absolute bottom-12 z-20 text-white/50"
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        aria-label={t('scroll')}
       >
         <ArrowDown className="w-6 h-6" />
       </motion.div>

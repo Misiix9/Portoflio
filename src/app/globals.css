@@ -25,9 +25,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide default cursor globally */
-*, *::before, *::after {
-  cursor: none !important;
+/* Hide the native cursor only when the custom cursor is active. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Custom Scrollbar */

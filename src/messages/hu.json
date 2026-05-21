@@ -1,7 +1,160 @@
 {
-  "Home": {
-    "role": "Professzionális Webfejlesztő és Tervező",
-    "bio1": "20 éves informatikus hallgató vagyok Budapesten. Szenvedélyem a web- és alkalmazásfejlesztés, valamint a tervezés; célom a funkcionális kód és a lenyűgöző látványvilág ötvözése.",
-    "bio2": "Precíz, pontos és gyors. Elkötelezett vagyok a minőségi digitális megoldások iránt startupok és vállalkozások számára."
+  "Nav": {
+    "about": "Rólam",
+    "projects": "Munkák",
+    "skills": "Készségek",
+    "contact": "Kapcsolat"
+  },
+  "LanguageSwitcher": {
+    "ariaLabel": "Nyelv váltása",
+    "switchTo": "Váltás erre: {locale}",
+    "english": "angol",
+    "hungarian": "magyar"
+  },
+  "Hero": {
+    "brand": "SELORA",
+    "name": "GYŐRI MIHÁLY",
+    "role": "Full Stack mérnök",
+    "location": "Budapest, Magyarország",
+    "resume": "Önéletrajz",
+    "copyEmail": "Email másolása",
+    "copied": "Másolva!",
+    "github": "GitHub profil megnyitása",
+    "linkedin": "LinkedIn profil megnyitása",
+    "instagram": "Instagram profil megnyitása",
+    "scroll": "Görgetés a tartalomhoz"
+  },
+  "About": {
+    "available": "Nyitott vagyok új munkára",
+    "sectionLabel": "Rólam",
+    "established": "2023 óta",
+    "headingBefore": "Céllal építek",
+    "headingAccent": "digitális élményeket",
+    "headingAfter": ".",
+    "body": "Mihály vagyok, Full Stack mérnök, aki összeköti a designt és a fejlesztést. Gyors, akadálymentes, megbízható és látványosan kifinomult digitális termékeket készítek, főként React-alapú és nagy teljesítményű felületekkel.",
+    "interests": "Stratégiai játékok és FPS • Üzleti és fantasy könyvek • Hardstyle, techno, hip-hop és fókuszált késő esti fejlesztések • Arch Linux munkafolyamatok",
+    "more": "Több",
+    "less": "Kevesebb",
+    "extended": "A kliens- és termékmunkák mellett ugyanazt a rendszerszemléletet és igényességet csiszolom tovább: versenyorientált játékokkal, üzleti olvasással, fantasy világokkal, gondosan összerakott lejátszási listákkal és Linux munkafolyamatokkal, amelyek gyorsabbá teszik a napi fejlesztést.",
+    "stats": {
+      "years": "Év tapasztalat",
+      "yearsHint": "Tanulmányok óta",
+      "projects": "Projekt",
+      "commitment": "Elhivatottság"
+    },
+    "tech": {
+      "title": "Tech eszköztár",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Eszközök"
+    },
+    "location": {
+      "city": "Budapest",
+      "based": "Magyarországon",
+      "language": "Nyelvek",
+      "languages": "HU / EN / ES",
+      "relocation": "Költözés",
+      "relocationValue": "Megoldható",
+      "reply": "Átlagos válasz",
+      "replyValue": "< 24 óra"
+    },
+    "live": {
+      "githubMetricContributions": "hozzájárulás",
+      "githubMetricCommits": "commit",
+      "spotifyLoading": "Betöltés...",
+      "spotifyNotPlaying": "Nem szól zene",
+      "spotifyNotConnected": "Nincs kapcsolat",
+      "nextAvailable": "Következő elérhetőség",
+      "open": "Nyitott"
+    },
+    "availability": {
+      "today": "Ma",
+      "tomorrow": "Holnap"
+    }
+  },
+  "Skills": {
+    "headingBefore": "Saját",
+    "headingAccent": "készségek",
+    "intro": "Eszközök és területek, amelyekkel kifinomult digitális termékeket építek.",
+    "items": {
+      "web": "Webfejlesztés",
+      "app": "Alkalmazásfejlesztés",
+      "design": "UI/UX design",
+      "backend": "Backend",
+      "algorithms": "Algoritmusok",
+      "devops": "DevOps"
+    }
+  },
+  "Showcase": {
+    "headingBefore": "Kiemelt",
+    "headingAccent": "munkák",
+    "filters": {
+      "all": "Összes",
+      "project": "Fejlesztés",
+      "study": "Tanulmány"
+    },
+    "kinds": {
+      "project": "Projekt",
+      "work": "Munka",
+      "study": "Tanulmány"
+    },
+    "open": "{title} megnyitása",
+    "items": {
+      "footify-landing": {
+        "title": "Footify Landing Page",
+        "description": "Célzott marketingoldal egy futballstatisztikai termékhez, egyértelmű pozicionálással és gyors konverziós úttal."
+      },
+      "footify-app": {
+        "title": "Footify App",
+        "description": "Mobil- és webalkalmazás futballstatisztikákhoz, meccsadatokhoz és sportadat-alapú munkafolyamatokhoz."
+      },
+      "savys-tips": {
+        "title": "Savy's Tips",
+        "description": "Futballpredikciós társalkalmazás napi tippekkel, prémium kombóelőzményekkel, közösségi jelzésekkel, értesítésekkel és natív iOS release assetekkel."
+      },
+      "dam": {
+        "title": "DAM Invisible Technology",
+        "description": "Service Desk Agent munka felhasználói támogatással, rendszerek kezelésével, incidenskezeléssel és megbízható operatív kommunikációval."
+      },
+      "elte": {
+        "title": "ELTE",
+        "description": "Programtervező informatikus BSc tanulmányok szoftverfejlesztési fókuszban Budapesten."
+      },
+      "petofi-aszod": {
+        "title": "Petőfi Sándor Technikum, Aszód",
+        "description": "Szoftverfejlesztő és -tesztelő specializáció erős gyakorlati technikumi alappal."
+      }
+    }
+  },
+  "GlobalReach": {
+    "heading": "Globális elérés",
+    "headingAccent": "helyi hatással.",
+    "body": "Időzónákon átívelő ügyfél- és csapatmunkában dolgozom, tiszta aszinkron kommunikációval, gondos tervezéssel és remote-first szállítással.",
+    "remoteValue": "100%",
+    "remoteLabel": "Remote-ready",
+    "asyncValue": "24/7",
+    "asyncLabel": "Aszinkron munka"
+  },
+  "Contact": {
+    "headingBefore": "Lépjünk",
+    "headingAccent": "kapcsolatba",
+    "intro": "Érdekel a közös munka? Írj egy rövid üzenetet, és amint tudok, válaszolok.",
+    "name": "Név",
+    "email": "Email",
+    "message": "Üzenet",
+    "namePlaceholder": "Kovács Anna",
+    "emailPlaceholder": "anna@example.com",
+    "messagePlaceholder": "Írj pár mondatot a projektedről...",
+    "send": "Üzenet küldése",
+    "sending": "Küldés...",
+    "success": "Sikeresen elküldve!",
+    "error": "Sikertelen küldés. Próbáld újra.",
+    "missingConfig": "Az emailküldés még nincs konfigurálva. Addig írj ide: hi@selora.dev."
+  },
+  "Footer": {
+    "rights": "Győri Mihály. Minden jog fenntartva.",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
   }
 }

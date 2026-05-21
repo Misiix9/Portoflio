@@ -7,6 +7,7 @@ import About from '@/components/sections/About';
 
 import GlobalReach from '@/components/sections/GlobalReach';
 import MagneticGallery from '@/components/sections/MagneticGallery';
+import Skills from '@/components/sections/Skills';
 import Contact from '@/components/sections/Contact';
 
 export function generateStaticParams() {
@@ -33,6 +34,7 @@ export default async function Home({
       <Hero />
       <About />
       <MagneticGallery />
+      <Skills />
       <GlobalReach />
       <Contact />
 

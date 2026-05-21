@@ -1,8 +1,10 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const REDIRECT_URI = process.env.VERCEL_URL 
-  ? `https://${process.env.VERCEL_URL}/api/google-callback`
-  : 'http://localhost:3000/api/google-callback';
+const REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI || (
+  process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}/api/google-callback`
+    : 'http://localhost:3000/api/google-callback'
+);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { code, error } = req.query;

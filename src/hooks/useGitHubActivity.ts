@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 
 interface GitHubActivity {
-  totalCommits: number;
+  total: number;
+  metric: 'contributions' | 'pushCommits';
   levels: number[]; // Array of 28 numbers (0-3) representing activity levels for last 28 days (4 weeks)
   lastUpdated: string;
   isLoading: boolean;
@@ -12,7 +13,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export function useGitHubActivity() {
   const [data, setData] = useState<GitHubActivity>({
-    totalCommits: 0,
+    total: 0,
+    metric: 'contributions',
     levels: Array(28).fill(0),
     lastUpdated: '',
     isLoading: true,
@@ -24,7 +26,8 @@ export function useGitHubActivity() {
       // If no API URL is set, use fallback data
       if (!API_URL) {
         setData({
-          totalCommits: 56,
+          total: 56,
+          metric: 'contributions',
           levels: [2, 3, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 3, 1],
           lastUpdated: new Date().toISOString(),
           isLoading: false,
@@ -39,8 +42,9 @@ export function useGitHubActivity() {
         
         const result = await response.json();
         setData({
-          totalCommits: result.totalCommits,
-          levels: result.levels,
+          total: result.totalContributions ?? result.pushCommitCount ?? result.totalCommits ?? 0,
+          metric: result.metric === 'pushCommits' ? 'pushCommits' : 'contributions',
+          levels: Array.isArray(result.levels) ? result.levels : Array(28).fill(0),
           lastUpdated: result.lastUpdated,
           isLoading: false,
           error: null,
@@ -49,7 +53,8 @@ export function useGitHubActivity() {
         console.error('GitHub fetch error:', err);
         // Use fallback data on error
         setData({
-          totalCommits: 56,
+          total: 56,
+          metric: 'contributions',
           levels: [2, 3, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 3, 1, 2, 3, 1, 3, 2, 3, 1],
           lastUpdated: new Date().toISOString(),
           isLoading: false,

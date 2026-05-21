@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/routing';
 import { motion } from 'framer-motion';
 import { Globe } from 'lucide-react';
@@ -8,6 +8,7 @@ import { useState, useTransition } from 'react';
 import clsx from 'clsx';
 
 export default function LanguageSwitcher({ fixed = false }: { fixed?: boolean }) {
+  const t = useTranslations('LanguageSwitcher');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -20,15 +21,20 @@ export default function LanguageSwitcher({ fixed = false }: { fixed?: boolean })
       router.replace(pathname, { locale: nextLocale });
     });
   };
+  const nextLocaleName = locale === 'en' ? t('hungarian') : t('english');
 
   return (
     <motion.button
+      type="button"
       onClick={toggleLanguage}
+      disabled={isPending}
+      aria-label={t('switchTo', { locale: nextLocaleName })}
+      title={t('ariaLabel')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={clsx(
         "flex items-center gap-2 overflow-hidden rounded-full border border-white/10 bg-black/50 px-4 py-2 backdrop-blur-md transition-colors hover:border-accent hover:bg-accent/10",
-        fixed ? "fixed top-8 right-8 z-50" : ""
+        fixed ? "fixed right-4 top-24 z-50 sm:right-8 sm:top-8" : ""
       )}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}

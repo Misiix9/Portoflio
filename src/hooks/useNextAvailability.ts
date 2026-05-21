@@ -6,7 +6,17 @@ interface Availability {
   isLoading: boolean;
 }
 
-export function useNextAvailability() {
+interface AvailabilityOptions {
+  locale?: string;
+  todayLabel?: string;
+  tomorrowLabel?: string;
+}
+
+export function useNextAvailability({
+  locale = 'en',
+  todayLabel = 'Today',
+  tomorrowLabel = 'Tomorrow',
+}: AvailabilityOptions = {}) {
   const [data, setData] = useState<Availability>({
     nextAvailable: '',
     isAvailableNow: false,
@@ -40,26 +50,27 @@ export function useNextAvailability() {
         const tomorrowAvailableHour = tomorrowIsWeekend ? 10 : 14;
         nextAvailable.setHours(tomorrowAvailableHour, 0, 0, 0);
       }
-      
+
       // Format the result
       const isToday = nextAvailable.getDate() === now.getDate();
       const isTomorrow = nextAvailable.getDate() === now.getDate() + 1;
-      
-      const timeStr = nextAvailable.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
+
+      const formatLocale = locale === 'hu' ? 'hu-HU' : 'en-US';
+      const timeStr = nextAvailable.toLocaleTimeString(formatLocale, {
+        hour: 'numeric',
         minute: '2-digit',
-        hour12: true 
+        hour12: locale !== 'hu'
       });
-      
+
       let dayStr: string;
       if (isToday) {
-        dayStr = 'Today';
+        dayStr = todayLabel;
       } else if (isTomorrow) {
-        dayStr = 'Tomorrow';
+        dayStr = tomorrowLabel;
       } else {
-        dayStr = nextAvailable.toLocaleDateString('en-US', { weekday: 'short' });
+        dayStr = nextAvailable.toLocaleDateString(formatLocale, { weekday: 'short' });
       }
-      
+
       setData({
         nextAvailable: `${dayStr} ${timeStr}`,
         isAvailableNow,
@@ -72,7 +83,7 @@ export function useNextAvailability() {
     // Update every minute
     const interval = setInterval(calculateNextAvailable, 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [locale, todayLabel, tomorrowLabel]);
 
   return data;
 }

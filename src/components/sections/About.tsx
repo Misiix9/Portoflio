@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { MapPin, Database, Layout, Server, Code, Palette, Terminal, Clock, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Music, Calendar, Github, ExternalLink } from 'lucide-react';
 import { useGitHubActivity } from '@/hooks/useGitHubActivity';
@@ -11,12 +11,11 @@ import { useSpotifyPlayback } from '@/hooks/useSpotifyPlayback';
 import { useNextAvailability } from '@/hooks/useNextAvailability';
 
 export default function About() {
-  const t = useTranslations('Home');
+  const t = useTranslations('About');
+  const locale = useLocale();
 
   // Live time state
   const [budapestTime, setBudapestTime] = useState('');
-  const [visitorTime, setVisitorTime] = useState('');
-  const [visitorTimezone, setVisitorTimezone] = useState('');
 
   useEffect(() => {
     const updateTimes = () => {
@@ -28,18 +27,6 @@ export default function About() {
         hour12: false
       });
       setBudapestTime(budapest);
-
-      // Visitor's local time
-      const visitor = new Date().toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
-      setVisitorTime(visitor);
-
-      // Get visitor's timezone abbreviation
-      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      setVisitorTimezone(tz.split('/').pop()?.replace('_', ' ') || 'Local');
     };
 
     updateTimes();
@@ -56,12 +43,19 @@ export default function About() {
   // Live data hooks
   const githubData = useGitHubActivity();
   const spotifyData = useSpotifyPlayback();
-  const availabilityData = useNextAvailability();
+  const availabilityData = useNextAvailability({
+    locale,
+    todayLabel: t('availability.today'),
+    tomorrowLabel: t('availability.tomorrow'),
+  });
+  const spotifyTitle = spotifyData.error
+    ? t('live.spotifyNotConnected')
+    : (spotifyData.track || t('live.spotifyNotPlaying'));
 
   // Extended Tech Stack Data
   const techStack = [
     {
-      category: "Frontend", items: [
+      category: t('tech.frontend'), items: [
         { name: "Next.js", icon: <Layout className="w-4 h-4" />, color: "text-blue-400 bg-blue-500/10" },
         { name: "React", icon: <Code className="w-4 h-4" />, color: "text-cyan-400 bg-cyan-500/10" },
         { name: "Tailwind", icon: <Palette className="w-4 h-4" />, color: "text-sky-400 bg-sky-500/10" },
@@ -69,14 +63,14 @@ export default function About() {
       ]
     },
     {
-      category: "Backend", items: [
+      category: t('tech.backend'), items: [
         { name: "Node.js", icon: <Server className="w-4 h-4" />, color: "text-green-400 bg-green-500/10" },
         { name: "PostgreSQL", icon: <Database className="w-4 h-4" />, color: "text-indigo-400 bg-indigo-500/10" },
         { name: "Firebase", icon: <Database className="w-4 h-4" />, color: "text-yellow-400 bg-yellow-500/10" },
       ]
     },
     {
-      category: "Tools", items: [
+      category: t('tech.tools'), items: [
         { name: "TypeScript", icon: <Code className="w-4 h-4" />, color: "text-blue-500 bg-blue-600/10" },
         { name: "Git", icon: <Terminal className="w-4 h-4" />, color: "text-orange-400 bg-orange-500/10" },
         { name: "Figma", icon: <Palette className="w-4 h-4" />, color: "text-pink-400 bg-pink-500/10" },
@@ -110,7 +104,7 @@ export default function About() {
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-xs font-medium text-white/80 backdrop-blur-md bg-black/30 px-2 py-1 rounded-full border border-white/10">
-                Available for work
+                {t('available')}
               </span>
             </div>
           </div>
@@ -125,18 +119,18 @@ export default function About() {
         >
           <div>
             <div className="flex justify-between items-start mb-2">
-              <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">About Me</p>
-              <span className="text-xs text-gray-600 font-mono">EST. 2023</span>
+              <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('sectionLabel')}</p>
+              <span className="text-xs text-gray-600 font-mono">{t('established')}</span>
             </div>
             <h3 className="text-3xl font-bold text-white leading-tight mb-3">
-              I build pixels with <span className="text-accent">purpose</span>.
+              {t('headingBefore')} <span className="text-accent">{t('headingAccent')}</span>{t('headingAfter')}
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed text-balance">
-              I'm Mihály, a Full Stack Engineer who bridges the gap between design and engineering. I don't just write code; I craft digital experiences that are fast, accessible, and visually stunning. My focus is on React ecosystems and high-performance animations.
+              {t('body')}
             </p>
             {/* Personal Interests */}
             <p className="text-gray-500 text-xs mt-3 pt-3 border-t border-white/5">
-              🎮 Strategy &amp; FPS &nbsp;|&nbsp; 📚 Business &amp; Fantasy &nbsp;|&nbsp; 🎵 Hardstyle • Techno • Hip-Hop &nbsp;|&nbsp; 🦉 Night owl &nbsp;|&nbsp; 🐧 BTW, I use Arch
+              {t('interests')}
             </p>
 
             {/* More Toggle Button - Mobile Only */}
@@ -144,7 +138,7 @@ export default function About() {
               onClick={() => setIsExpanded(!isExpanded)}
               className="md:hidden flex items-center gap-1 text-accent text-xs hover:text-accent/80 transition-colors mt-2 group/more"
             >
-              <span>{isExpanded ? 'Less' : 'More'}</span>
+              <span>{isExpanded ? t('less') : t('more')}</span>
               {isExpanded ? (
                 <ChevronUp className="w-3 h-3 group-hover/more:-translate-y-0.5 transition-transform" />
               ) : (
@@ -162,7 +156,7 @@ export default function About() {
                   transition={{ duration: 0.3, ease: 'easeInOut' }}
                   className="text-gray-500 text-xs mt-2 overflow-hidden"
                 >
-                  Outside of work, you&apos;ll find me deep in strategy games plotting my next move, or in the middle of an intense FPS session. I balance screen time with reading—business books to sharpen my entrepreneurial edge, and fantasy novels to fuel my imagination. My playlist is a wild mix: hardstyle and techno for those late-night coding sprints, hip-hop to keep the energy up, and lo-fi when I need to zone in. I also maintain Arch Linux scripts on GitHub, because yes, I use Arch.
+                  {t('extended')}
                 </motion.p>
               )}
             </AnimatePresence>
@@ -172,18 +166,18 @@ export default function About() {
           <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/5">
             <div className="bg-white/5 rounded-xl p-3 text-center hover:bg-white/10 transition-colors group/stat relative cursor-pointer">
               <h4 className="text-2xl font-bold text-white">5+</h4>
-              <p className="text-[10px] uppercase tracking-wider text-gray-500">Years Exp</p>
-              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[9px] text-accent whitespace-nowrap opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300">(Since Studying)</span>
+              <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('stats.years')}</p>
+              <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[9px] text-accent whitespace-nowrap opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300">({t('stats.yearsHint')})</span>
             </div>
             <div className="bg-white/5 rounded-xl p-3 text-center hover:bg-white/10 transition-colors">
               <a href="https://github.com/Misiix9" target="_blank" rel="noreferrer">
                 <h4 className="text-2xl font-bold text-white">10+</h4>
-                <p className="text-[10px] uppercase tracking-wider text-gray-500">Projects</p>
+                <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('stats.projects')}</p>
               </a>
             </div>
             <div className="bg-white/5 rounded-xl p-3 text-center hover:bg-white/10 transition-colors">
               <h4 className="text-2xl font-bold text-white">100%</h4>
-              <p className="text-[10px] uppercase tracking-wider text-gray-500">Committed</p>
+              <p className="text-[10px] uppercase tracking-wider text-gray-500">{t('stats.commitment')}</p>
             </div>
           </div>
         </motion.div>
@@ -196,7 +190,7 @@ export default function About() {
           className={`grid-tech md:col-span-2 bg-[#111] border border-white/5 p-6 rounded-3xl flex flex-col gap-4 group hover:border-white/10 transition-colors ${isExpanded ? 'order-3' : 'order-4'}`}
         >
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Tech Arsenal</h4>
+            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('tech.title')}</h4>
             <Code className="w-4 h-4 text-gray-600" />
           </div>
 
@@ -235,9 +229,9 @@ export default function About() {
                     <MapPin className="w-4 h-4 text-accent" />
                     <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   </div>
-                  <h4 className="text-white font-bold text-sm">Budapest</h4>
+                  <h4 className="text-white font-bold text-sm">{t('location.city')}</h4>
                 </div>
-                <p className="text-gray-500 text-xs pl-6">Based in Hungary 🇭🇺</p>
+                <p className="text-gray-500 text-xs pl-6">{t('location.based')}</p>
               </div>
               {/* Live Local Time */}
               <div className="p-2 rounded-lg bg-white/5 text-xs text-white font-mono flex items-center gap-1.5">
@@ -250,17 +244,17 @@ export default function About() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-gray-400">
-                <span>Language</span>
-                <span className="text-white">HU / EN / ES</span>
+                <span>{t('location.language')}</span>
+                <span className="text-white">{t('location.languages')}</span>
               </div>
               <div className="flex items-center justify-between text-xs text-gray-400">
-                <span>Relocation</span>
-                <span className="text-white">Available</span>
+                <span>{t('location.relocation')}</span>
+                <span className="text-white">{t('location.relocationValue')}</span>
               </div>
               {/* Response Time */}
               <div className="flex items-center justify-between text-xs text-gray-400">
-                <span>Avg. reply</span>
-                <span className="text-green-400">{'< 24h'}</span>
+                <span>{t('location.reply')}</span>
+                <span className="text-green-400">{t('location.replyValue')}</span>
               </div>
             </div>
 
@@ -310,9 +304,11 @@ export default function About() {
                   </div>
                   <div className="text-right shrink-0">
                     <span className="text-xs text-white font-medium">
-                      {githubData.isLoading ? '...' : githubData.totalCommits}
+                      {githubData.isLoading ? '...' : githubData.total}
                     </span>
-                    <span className="text-[10px] text-gray-500 block">commits</span>
+                    <span className="text-[10px] text-gray-500 block">
+                      {githubData.metric === 'pushCommits' ? t('live.githubMetricCommits') : t('live.githubMetricContributions')}
+                    </span>
                   </div>
                 </div>
               )}
@@ -321,6 +317,7 @@ export default function About() {
                 /* Spotify - With artist, progress bar, and open button */
                 <div className="flex items-center gap-2 w-full">
                   {spotifyData.albumArt ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={spotifyData.albumArt}
                       alt="Album art"
@@ -340,13 +337,13 @@ export default function About() {
                         className="flex items-center gap-1 group/title"
                       >
                         <p className="text-white text-xs font-medium truncate group-hover/title:text-white/80 group-hover/title:underline transition-colors">
-                          {spotifyData.isLoading ? 'Loading...' : (spotifyData.track || 'Not playing')}
+                          {spotifyData.isLoading ? t('live.spotifyLoading') : spotifyTitle}
                         </p>
                         <ExternalLink className="w-3 h-3 text-white shrink-0 group-hover/title:text-white/80 transition-colors" />
                       </a>
                     ) : (
                       <p className="text-white text-xs font-medium truncate">
-                        {spotifyData.isLoading ? 'Loading...' : (spotifyData.track || 'Not playing')}
+                        {spotifyData.isLoading ? t('live.spotifyLoading') : spotifyTitle}
                       </p>
                     )}
                     {spotifyData.artist && (
@@ -379,13 +376,13 @@ export default function About() {
                     <Calendar className="w-5 h-5 text-accent" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Next available</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">{t('live.nextAvailable')}</p>
                     <p className="text-white text-sm font-medium">
-                      {availabilityData.isLoading ? 'Loading...' : availabilityData.nextAvailable}
+                      {availabilityData.isLoading ? t('live.spotifyLoading') : availabilityData.nextAvailable}
                     </p>
                   </div>
                   <div className="px-2 py-1 rounded-full bg-green-500/20 shrink-0">
-                    <span className="text-[10px] text-green-400 font-medium">Open</span>
+                    <span className="text-[10px] text-green-400 font-medium">{t('live.open')}</span>
                   </div>
                 </div>
               )}

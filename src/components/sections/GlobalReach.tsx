@@ -1,26 +1,53 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import createGlobe from 'cobe';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 export default function GlobalReach() {
+  const t = useTranslations('GlobalReach');
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const [isGlobeReady, setIsGlobeReady] = useState(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    if (!('IntersectionObserver' in window)) {
+      const frame = requestAnimationFrame(() => setIsGlobeReady(true));
+      return () => cancelAnimationFrame(frame);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsGlobeReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '240px' },
+    );
+
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     let phi = 0;
 
-    if (!canvasRef.current) return;
+    if (!isGlobeReady || !canvasRef.current) return;
 
     const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, shouldReduceMotion ? 1 : 1.5),
       width: 1000,
       height: 1000,
       phi: 0,
       theta: 0,
       dark: 1,
       diffuse: 1.2,
-      mapSamples: 16000,
+      mapSamples: shouldReduceMotion ? 4500 : 9000,
       mapBrightness: 6,
       baseColor: [0.1, 0.1, 0.1], // Gray base (User requested)
       markerColor: [0.9, 0.1, 0.2], // Bright Red for markers (approx #e51a32)
@@ -36,14 +63,16 @@ export default function GlobalReach() {
         // Called on every animation frame.
         // state.phi = current phi angle
         state.phi = phi;
-        phi += 0.003;
+        if (!shouldReduceMotion) {
+          phi += 0.002;
+        }
       },
     });
 
     return () => {
       globe.destroy();
     };
-  }, []);
+  }, [isGlobeReady, shouldReduceMotion]);
 
   return (
     <section className="w-full py-24 container mx-auto px-6 overflow-hidden">
@@ -57,21 +86,21 @@ export default function GlobalReach() {
             className="flex flex-col gap-6"
         >
             <h2 className="text-4xl font-bold text-white mb-2">
-                Global Reach <br />
-                <span className="text-accent">Local Impact.</span>
+                {t('heading')} <br />
+                <span className="text-accent">{t('headingAccent')}</span>
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed">
-                I work with clients worldwide, bridging time zones with efficient communication and remote-first workflows. Whether you're in New York, London, or Tokyo, I'm just a Slack message away.
+                {t('body')}
             </p>
             
             <div className="flex gap-4 mt-4">
                 <div className="p-4 bg-white/5 border border-white/10 rounded-2xl flex-1 backdrop-blur-sm">
-                    <h3 className="text-2xl font-bold text-white">100%</h3>
-                    <p className="text-sm text-gray-500 uppercase tracking-widest mt-1">Remote Ready</p>
+                    <h3 className="text-2xl font-bold text-white">{t('remoteValue')}</h3>
+                    <p className="text-sm text-gray-500 uppercase tracking-widest mt-1">{t('remoteLabel')}</p>
                 </div>
                 <div className="p-4 bg-white/5 border border-white/10 rounded-2xl flex-1 backdrop-blur-sm">
-                    <h3 className="text-2xl font-bold text-white">24/7</h3>
-                    <p className="text-sm text-gray-500 uppercase tracking-widest mt-1">Async Work</p>
+                    <h3 className="text-2xl font-bold text-white">{t('asyncValue')}</h3>
+                    <p className="text-sm text-gray-500 uppercase tracking-widest mt-1">{t('asyncLabel')}</p>
                 </div>
             </div>
         </motion.div>

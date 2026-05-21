@@ -1,7 +1,160 @@
 {
-  "Home": {
-    "role": "Professional Web Developer & Designer",
-    "bio1": "I am a 20-year-old IT student based in Budapest, Hungary. My passion lies in web/app development and design, aiming to bridge the gap between functional code and stunning visuals.",
-    "bio2": "Precise, punctual, and quick. I am dedicated to delivering high-quality digital solutions for startups and businesses."
+  "Nav": {
+    "about": "About",
+    "projects": "Projects",
+    "skills": "Skills",
+    "contact": "Contact"
+  },
+  "LanguageSwitcher": {
+    "ariaLabel": "Switch language",
+    "switchTo": "Switch to {locale}",
+    "english": "English",
+    "hungarian": "Hungarian"
+  },
+  "Hero": {
+    "brand": "SELORA",
+    "name": "MIHALY GYORI",
+    "role": "Full Stack Engineer",
+    "location": "Budapest, Hungary",
+    "resume": "Resume",
+    "copyEmail": "Copy Email",
+    "copied": "Copied!",
+    "github": "Open GitHub profile",
+    "linkedin": "Open LinkedIn profile",
+    "instagram": "Open Instagram profile",
+    "scroll": "Scroll to content"
+  },
+  "About": {
+    "available": "Available for work",
+    "sectionLabel": "About Me",
+    "established": "EST. 2023",
+    "headingBefore": "I build pixels with",
+    "headingAccent": "purpose",
+    "headingAfter": ".",
+    "body": "I'm Mihaly, a Full Stack Engineer who bridges design and engineering. I craft digital products that are fast, accessible, reliable, and visually sharp, with a focus on React ecosystems and high-performance interfaces.",
+    "interests": "Strategy games and FPS • Business and fantasy books • Hardstyle, techno, hip-hop, and focused late-night builds • Arch Linux workflows",
+    "more": "More",
+    "less": "Less",
+    "extended": "Outside client and product work, I keep sharpening the same mix of systems thinking and taste: competitive games, business reading, fantasy worlds, carefully tuned playlists, and Linux workflows that make my daily development setup faster.",
+    "stats": {
+      "years": "Years Exp",
+      "yearsHint": "Since studying",
+      "projects": "Projects",
+      "commitment": "Committed"
+    },
+    "tech": {
+      "title": "Tech Arsenal",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Tools"
+    },
+    "location": {
+      "city": "Budapest",
+      "based": "Based in Hungary",
+      "language": "Language",
+      "languages": "HU / EN / ES",
+      "relocation": "Relocation",
+      "relocationValue": "Available",
+      "reply": "Avg. reply",
+      "replyValue": "< 24h"
+    },
+    "live": {
+      "githubMetricContributions": "contributions",
+      "githubMetricCommits": "commits",
+      "spotifyLoading": "Loading...",
+      "spotifyNotPlaying": "Not playing",
+      "spotifyNotConnected": "Not connected",
+      "nextAvailable": "Next available",
+      "open": "Open"
+    },
+    "availability": {
+      "today": "Today",
+      "tomorrow": "Tomorrow"
+    }
+  },
+  "Skills": {
+    "headingBefore": "My",
+    "headingAccent": "Skills",
+    "intro": "Tools and disciplines I use to build polished digital products.",
+    "items": {
+      "web": "Web Development",
+      "app": "App Development",
+      "design": "UI/UX Design",
+      "backend": "Backend",
+      "algorithms": "Algorithms",
+      "devops": "DevOps"
+    }
+  },
+  "Showcase": {
+    "headingBefore": "Selected",
+    "headingAccent": "Works",
+    "filters": {
+      "all": "All",
+      "project": "Dev",
+      "study": "Study"
+    },
+    "kinds": {
+      "project": "Project",
+      "work": "Work",
+      "study": "Study"
+    },
+    "open": "Open {title}",
+    "items": {
+      "footify-landing": {
+        "title": "Footify Landing Page",
+        "description": "A focused marketing site for a football statistics product, built around clear positioning and fast conversion."
+      },
+      "footify-app": {
+        "title": "Footify App",
+        "description": "A mobile and web app for football statistics, match insight, and sports data workflows."
+      },
+      "savys-tips": {
+        "title": "Savy's Tips",
+        "description": "A football prediction companion with daily picks, premium combo history, voting signals, notifications, and native iOS release assets."
+      },
+      "dam": {
+        "title": "DAM Invisible Technology",
+        "description": "Service Desk Agent work supporting users, systems, incident handling, and reliable operational communication."
+      },
+      "elte": {
+        "title": "ELTE University",
+        "description": "BSc Computer Science studies with a software engineering focus in Budapest."
+      },
+      "petofi-aszod": {
+        "title": "Petofi Sandor Technical School, Aszod",
+        "description": "Software development and testing specialization with a practical technical foundation."
+      }
+    }
+  },
+  "GlobalReach": {
+    "heading": "Global Reach",
+    "headingAccent": "Local Impact.",
+    "body": "I work with clients and teams across time zones through clear async communication, careful planning, and remote-first delivery.",
+    "remoteValue": "100%",
+    "remoteLabel": "Remote Ready",
+    "asyncValue": "24/7",
+    "asyncLabel": "Async Work"
+  },
+  "Contact": {
+    "headingBefore": "Get in",
+    "headingAccent": "Touch",
+    "intro": "Interested in working together? Send a short message and I will reply as soon as possible.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "messagePlaceholder": "Tell me about your project...",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Sent successfully!",
+    "error": "Failed. Try again.",
+    "missingConfig": "Email is not configured yet. Please use hi@selora.dev for now."
+  },
+  "Footer": {
+    "rights": "Mihaly Gyori. All rights reserved.",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
   }
 }
