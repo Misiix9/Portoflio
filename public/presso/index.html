@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presso — Video &amp; Photo Compressor for Mac</title>
+<meta name="description" content="Presso compresses videos and photos to the size you need, entirely on your Mac. One-time purchase, no subscription, no accounts, nothing uploaded.">
+<meta name="robots" content="index,follow">
+<style>
+  @font-face { font-family:"Technor"; src:url("/presso/fonts/Technor-Semibold.woff2") format("woff2"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Supreme"; src:url("/presso/fonts/Supreme-Regular.woff2") format("woff2"); font-weight:400; font-display:swap; }
+  @font-face { font-family:"Supreme"; src:url("/presso/fonts/Supreme-Medium.woff2") format("woff2"); font-weight:500; font-display:swap; }
+  @font-face { font-family:"Martian Mono"; src:url("/presso/fonts/MartianMono-Regular.woff2") format("woff2"); font-weight:400; font-display:swap; }
+
+  :root {
+    --page:#F1F0EC; --surface:#FAF9F6; --ink:#17191C; --muted:#5A6674; --faint:#7A8592;
+    --accent:#B84512; --accent-tint:#F7E4D8; --line:rgba(23,25,28,.14);
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#12151A; --surface:#1A1E24; --ink:#EDEDEA; --muted:#98A2AE; --faint:#6B7480;
+            --accent:#FF6B35; --accent-tint:#2E2018; --line:rgba(237,237,234,.16); }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink); text-align:center;
+    font:17px/1.6 "Supreme", -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:560px; margin:0 auto; padding:14vh 24px 96px; }
+  .mark { width:84px; height:84px; border-radius:20px; background:var(--accent);
+    display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.6rem; }
+  .mark svg { display:block; }
+  h1 { font-family:"Technor", sans-serif; font-weight:600; font-size:2.6rem; margin:0 0 .5rem; letter-spacing:.005em; }
+  p.tag { color:var(--muted); font-size:1.08rem; margin:0 auto 1.6rem; max-width:36ch; text-wrap:pretty; }
+  .meta { font-family:"Martian Mono", ui-monospace, monospace; font-size:.78rem; color:var(--faint);
+    letter-spacing:.02em; margin:0 0 2.4rem; }
+  .links a { display:inline-block; color:var(--accent); text-decoration:none; margin:0 .55rem .4rem;
+    border-bottom:1px solid var(--line); padding-bottom:2px; font-weight:500;
+    transition:border-color .18s cubic-bezier(.2,.9,.1,1), color .18s cubic-bezier(.2,.9,.1,1); }
+  .links a:hover, .links a:focus-visible { border-color:var(--accent); }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  footer { margin-top:3rem; color:var(--faint); font-size:.9rem; }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="mark" aria-hidden="true">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v10m0 0l-3.5-3.5M12 13l3.5-3.5"/>
+      <path d="M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3"/>
+    </svg>
+  </div>
+  <h1>Presso</h1>
+  <p class="tag">Drop a video or a photo, pick where it's going, and it comes back small enough to send.
+  Everything happens on your Mac. Nothing is ever uploaded.</p>
+  <p class="meta">macOS 14+ · one-time purchase · no subscription</p>
+  <p class="links">
+    <a href="/presso/support/">Support</a>
+    <a href="/presso/privacy/">Privacy</a>
+    <a href="/presso/terms/">Terms</a>
+    <a href="mailto:support@selora.dev">Contact</a>
+  </p>
+  <footer>Selora · Presso</footer>
+</main>
+</body>
+</html>

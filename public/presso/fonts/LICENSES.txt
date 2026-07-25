@@ -1,0 +1,16 @@
+Font licenses for the Presso website
+====================================
+
+Technor (Semibold, Bold) and Supreme (Regular, Medium, Bold)
+- Source: Fontshare (Indian Type Foundry), downloaded via api.fontshare.com
+- License: Fontshare Free Font License (FF EULA). §01 grants use "in any media
+  (including Print, Web, Mobile, Digital, Apps, ePub, Broadcasting and OEM) at any
+  scale, at any location worldwide", free for personal or commercial use.
+- These are the WEB woff2 builds distributed by Fontshare for self-hosting.
+- Full license text: ../../assets/fonts/Fontshare-FFL.txt (in this repository).
+
+Martian Mono (Regular 400, Bold 700 — latin subset)
+- Copyright 2021 The Martian Mono Project Authors (https://github.com/evilmartians/mono)
+- License: SIL Open Font License 1.1 (embedding and web self-hosting permitted).
+- woff2 builds via the Fontsource distribution (@fontsource/martian-mono).
+- Full license text: ../../assets/fonts/MartianMono-OFL.txt (in this repository).

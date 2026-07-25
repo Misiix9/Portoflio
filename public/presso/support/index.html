@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presso — Support</title>
+<meta name="description" content="Support for Presso, the on-device video and photo compressor for Mac.">
+<style>
+  @font-face { font-family:"Technor"; src:url("/presso/fonts/Technor-Semibold.woff2") format("woff2"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Supreme"; src:url("/presso/fonts/Supreme-Regular.woff2") format("woff2"); font-weight:400; font-display:swap; }
+  @font-face { font-family:"Supreme"; src:url("/presso/fonts/Supreme-Medium.woff2") format("woff2"); font-weight:500; font-display:swap; }
+  @font-face { font-family:"Martian Mono"; src:url("/presso/fonts/MartianMono-Regular.woff2") format("woff2"); font-weight:400; font-display:swap; }
+
+  :root {
+    --page:#F1F0EC; --surface:#FAF9F6; --ink:#17191C; --muted:#5A6674; --faint:#7A8592;
+    --accent:#B84512; --accent-tint:#F7E4D8; --line:rgba(23,25,28,.14);
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#12151A; --surface:#1A1E24; --ink:#EDEDEA; --muted:#98A2AE; --faint:#6B7480;
+            --accent:#FF6B35; --accent-tint:#2E2018; --line:rgba(237,237,234,.16); }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+    font:17px/1.65 "Supreme", -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:70ch; margin:0 auto; padding:56px 24px 96px; }
+  h1 { font-family:"Technor", sans-serif; font-weight:600; font-size:2.3rem; line-height:1.12;
+    margin:0 0 .3rem; letter-spacing:.005em; text-wrap:balance; }
+  h2 { font-family:"Technor", sans-serif; font-weight:600; font-size:1.16rem; margin:2.2rem 0 .4rem; text-wrap:balance; }
+  .sub { font-family:"Martian Mono", ui-monospace, monospace; font-size:.76rem; color:var(--faint);
+    letter-spacing:.02em; margin:0 0 2.2rem; }
+  p, li { color:var(--muted); text-wrap:pretty; }
+  li { margin:.3rem 0; }
+  a { color:var(--accent); }
+  strong { color:var(--ink); font-weight:500; }
+  .lead { color:var(--ink); font-size:1.06rem; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:18px 22px; margin:1.6rem 0; }
+  .card p { margin:.25rem 0; }
+  .contact a { font-size:1.12rem; font-weight:500; }
+  kbd { font-family:"Martian Mono", ui-monospace, monospace; font-size:.82em; color:var(--ink);
+    background:var(--accent-tint); border-radius:5px; padding:1px 6px; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line);
+    color:var(--faint); font-size:.9rem; }
+  footer a { color:var(--faint); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Support</h1>
+  <p class="sub">Presso · by Selora</p>
+
+  <p class="lead"><strong>Presso</strong> compresses videos and photos to the size you actually need: under
+  25 MB for email, 10 MB for Discord, WhatsApp-ready, or any size you pick. Everything runs on your Mac.
+  Nothing is uploaded, there are no accounts, and there is no subscription.</p>
+
+  <div class="card contact">
+    <p>Need help? Email <a href="mailto:support@selora.dev">support@selora.dev</a>.</p>
+    <p style="color:var(--faint); font-size:.9rem">If you're reporting a problem, please include your macOS
+    version and roughly what the file was (length, resolution, camera or app it came from). That's usually
+    enough to reproduce it.</p>
+  </div>
+
+  <h2>How do I compress something?</h2>
+  <p>Drag a file onto the Presso window or the menu bar icon, pick where it's going, and press Compress. You
+  can also press <kbd>⌘O</kbd> to choose files, or right-click a file in Finder and choose
+  <strong>Compress with Presso</strong>. The smaller copy is saved next to the original, or wherever you
+  choose in Settings.</p>
+
+  <h2>Does it change my original file?</h2>
+  <p>Never. Presso always writes a new copy and leaves the original untouched. If you switch on
+  <strong>Move originals to the Trash</strong> in Settings, the original goes to the Trash after a successful
+  compression, where you can still recover it.</p>
+
+  <h2>What does Presso Pro unlock?</h2>
+  <p>Unlimited compressions, GIF and audio export, HEIC photos and any-size photo targets, saved presets, a
+  watch folder that compresses automatically, turbo batches, and the full resolution and frame-rate controls
+  in Custom. It's a single payment, never a subscription, and it's shared with your family through Family
+  Sharing. The first three compressions are free so you can check the results before paying.</p>
+
+  <h2>I bought Pro but it isn't showing</h2>
+  <p>Open <strong>Settings ▸ Presso Pro</strong> and choose <strong>Restore purchase</strong>, making sure
+  you're signed in with the Apple Account you bought it with. This is also how you unlock Pro on a second Mac.</p>
+
+  <h2>What can I compress?</h2>
+  <p>Videos in MP4, MOV, M4V and most other formats macOS can read, and photos in JPEG, PNG and HEIC.
+  Compressed videos come out as MP4 (H.264, or HEVC on the max-quality preset), photos as JPEG or, with Pro,
+  HEIC.</p>
+
+  <h2>Can I keep only part of a video?</h2>
+  <p>Yes. Press the scissors on a queued file to set a start and an end, and only that part is compressed.
+  This is free, and it's also the way to fit a long clip into a GIF, which tops out at 30 seconds.</p>
+
+  <h2>What happens to my photos' location data?</h2>
+  <p>It's removed. Presso writes fresh image data and never copies the original's metadata, so GPS
+  coordinates, camera details and timestamps stay behind. The copy you send carries the picture and nothing
+  else. Your original file keeps everything.</p>
+
+  <h2>Why is the result bigger or smaller than the estimate?</h2>
+  <p>The estimate uses the same maths as the encoder, so it's usually within a few percent, but how much a
+  video compresses depends on what's in it: fast motion and grain need more data than a static shot. Presso
+  checks the finished file and re-encodes once if it landed over the limit, so a preset's promise holds.</p>
+
+  <h2>Can it compress a folder automatically?</h2>
+  <p>With Pro, yes. In <strong>Settings ▸ Automation</strong> choose a watch folder: anything new you drop in
+  there gets compressed on its own with your current preset. Presso waits until the file has finished copying
+  before touching it, and never re-compresses its own output.</p>
+
+  <h2>Is my data private?</h2>
+  <p>Yes. Presso has no servers, no accounts and no analytics, and it makes no network requests at all. Your
+  files never leave your Mac. See the <a href="/presso/privacy/">Privacy Policy</a>.</p>
+
+  <h2>Refunds</h2>
+  <p>Purchases go through the Mac App Store, so refunds are handled by Apple at
+  <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>. If something isn't working, email
+  us first: we'd rather fix it.</p>
+
+  <footer>Selora · Presso · <a href="/presso/privacy/">Privacy</a> · <a href="/presso/terms/">Terms</a></footer>
+</main>
+</body>
+</html>
