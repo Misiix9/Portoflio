@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rentava — Privacy Policy</title>
+<meta name="description" content="Rentava's privacy policy: your rental records stay on your device unless you turn on backup. No tenant data is ever sold or shared.">
+<link rel="canonical" href="https://selora.dev/rentava/privacy/">
+<style>
+  @font-face { font-family:"Lexend"; src:url("/rentava/fonts/Lexend.woff2") format("woff2-variations");
+    font-weight:100 900; font-display:swap; }
+  :root {
+    --page:#F6F0EA; --surface:#FDF9F5; --ink:#1E1816; --muted:#6B5D58; --faint:#8A7A74;
+    --accent:#8E483F; --line:#DCCFC8;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#14100F; --surface:#1D1716; --ink:#F8F0ED; --muted:#C2B1AC; --faint:#9C8A85;
+            --accent:#E08A7E; --line:#40312E; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+    font:17px/1.65 "Lexend", -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:70ch; margin:0 auto; padding:56px 24px 96px; }
+  h1 { font-weight:600; font-size:2.2rem; line-height:1.12; margin:0 0 .3rem; letter-spacing:-.012em; }
+  h2 { font-weight:600; font-size:1.14rem; margin:2.2rem 0 .4rem; }
+  .sub { font-size:.8rem; color:var(--faint); letter-spacing:.02em; margin:0 0 2.2rem; }
+  p, li { color:var(--muted); text-wrap:pretty; }
+  li { margin:.3rem 0; }
+  a { color:var(--accent); }
+  strong { color:var(--ink); font-weight:600; }
+  code { font-size:.86em; color:var(--ink); }
+  .lead { color:var(--ink); font-size:1.05rem; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:18px 22px; margin:1.6rem 0; }
+  .card p { margin:.25rem 0; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line);
+    color:var(--faint); font-size:.9rem; }
+  footer a { color:var(--faint); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Privacy Policy</h1>
+  <p class="sub">Rentava · by Selora · last updated 30 August 2026</p>
+
+  <p class="lead">The short version: <strong>your rental records stay on your device</strong> unless you
+  choose to turn on backup. Rentava has no access to your tenants' details, sells nothing to anyone, and
+  shows no advertising.</p>
+
+  <h2>What Rentava stores, and where</h2>
+  <p>Everything you enter, properties, units, tenancies, rent charges, payments, deposits, expenses,
+  maintenance jobs, contacts, documents and reminders, is written to a database inside the app's own
+  storage on your iPhone or iPad. The app works fully offline and asks for no account to use it.</p>
+  <div class="card">
+    <p>By default, <strong>we cannot see, access or retrieve any of this.</strong> It never leaves your device.</p>
+    <p>There is no bank connection, and your tenants are never invited to anything or contacted by us.</p>
+  </div>
+
+  <h2>Optional backup and sync</h2>
+  <p>If you choose to connect an account, Rentava can back up your records so they survive a lost phone and
+  appear on your other devices. This is <strong>off until you turn it on</strong>, from
+  <strong>More ▸ Account</strong>.</p>
+  <p>When it is on, your records are stored in Google Firebase (Firestore and Cloud Storage), operated by
+  Google on our behalf as our data processor, and are readable only by your own signed-in account. Sign-in is
+  handled by Firebase Authentication using Sign in with Apple or an email address. We use the account
+  identifier only to keep your data separate from every other user's.</p>
+  <p>You can turn backup off at any time, and you can delete your account and its stored copy from within the
+  app. Deleting removes the cloud copy; the records already on your device stay there until you delete
+  the app.</p>
+
+  <h2>Information about your tenants</h2>
+  <p>Names, email addresses, phone numbers and tenancy details you record about other people are
+  <strong>your business records</strong>. Rentava stores them for you and does nothing else with them: they
+  are never sold, never shared with third parties, never used for advertising and never used to train
+  anything. If you are in the UK or the EU, you are the data controller for those records and Selora is your
+  processor for whatever you choose to back up.</p>
+
+  <h2>Analytics and crash reports</h2>
+  <p>Rentava sends a small amount of anonymous usage data through Google Analytics for Firebase and Firebase
+  Crashlytics, so we can tell which screens people use and see crashes we would otherwise never hear about.
+  These events describe <strong>how the app was used, never what you recorded</strong>: for example that a
+  paywall was shown, that a purchase completed, or that onboarding finished. No property address, tenant
+  name, payment amount or document ever appears in them.</p>
+  <p>Crash reports contain the technical state of the app at the moment it stopped, plus a device model and
+  operating system version. Rentava does not use the App Tracking Transparency identifier and does not track
+  you across other companies' apps or websites.</p>
+
+  <h2>Purchases</h2>
+  <p>Rentava Plus and Rentava Portfolio are subscriptions sold by <strong>Apple through the App Store</strong>.
+  Apple processes the payment; we never see your name, card or Apple Account details. Subscription status is
+  checked through RevenueCat, which receives an anonymous purchase identifier and the receipt Apple issues,
+  and returns whether the subscription is active. See
+  <a href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a> and
+  <a href="https://www.revenuecat.com/privacy/">RevenueCat's Privacy Policy</a>.</p>
+
+  <h2>Photos, camera and notifications</h2>
+  <p>Rentava asks for the photo library or camera only at the moment you attach a receipt or a property
+  photo, and it reads only the images you pick. Attachments are stored with your records and follow the same
+  rules as everything else. Notifications are used solely for reminders you created yourself, and Rentava
+  asks for permission only when you set your first one.</p>
+
+  <h2>Your rights</h2>
+  <p>Because your records are on your device, you already hold them. You can export your data from the app at
+  any time, and you can erase everything by deleting the app or, if backup is on, by deleting your account
+  from <strong>More ▸ Account</strong>. If you are in the UK or EU you also have the right to access,
+  correct, export and erase any personal data we hold, and to complain to your data protection authority.
+  Write to <a href="mailto:support@selora.dev">support@selora.dev</a> and we will answer within 30 days.</p>
+
+  <h2>Children</h2>
+  <p>Rentava is a tool for managing rental property and is not directed at children.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the updated version will be posted at this URL with a new "last updated" date.</p>
+
+  <footer>
+    Selora · <a href="mailto:support@selora.dev">support@selora.dev</a> ·
+    <a href="/rentava/">Rentava</a> · <a href="/rentava/terms/">Terms</a> ·
+    <a href="/rentava/support/">Support</a>
+  </footer>
+</main>
+</body>
+</html>

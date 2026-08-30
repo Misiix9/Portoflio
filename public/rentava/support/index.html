@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rentava — Support</title>
+<meta name="description" content="Help with Rentava: part payments, plans, backup, account deletion, refunds and how to reach a human.">
+<link rel="canonical" href="https://selora.dev/rentava/support/">
+<style>
+  @font-face { font-family:"Lexend"; src:url("/rentava/fonts/Lexend.woff2") format("woff2-variations");
+    font-weight:100 900; font-display:swap; }
+  :root {
+    --page:#F6F0EA; --surface:#FDF9F5; --ink:#1E1816; --muted:#6B5D58; --faint:#8A7A74;
+    --accent:#8E483F; --line:#DCCFC8;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#14100F; --surface:#1D1716; --ink:#F8F0ED; --muted:#C2B1AC; --faint:#9C8A85;
+            --accent:#E08A7E; --line:#40312E; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink);
+    font:17px/1.65 "Lexend", -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:70ch; margin:0 auto; padding:56px 24px 96px; }
+  h1 { font-weight:600; font-size:2.2rem; line-height:1.12; margin:0 0 .3rem; letter-spacing:-.012em; }
+  h2 { font-weight:600; font-size:1.14rem; margin:2.2rem 0 .4rem; }
+  .sub { font-size:.8rem; color:var(--faint); letter-spacing:.02em; margin:0 0 2.2rem; }
+  p, li { color:var(--muted); text-wrap:pretty; }
+  li { margin:.3rem 0; }
+  a { color:var(--accent); }
+  strong { color:var(--ink); font-weight:600; }
+  code { font-size:.86em; color:var(--ink); }
+  .lead { color:var(--ink); font-size:1.05rem; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:18px 22px; margin:1.6rem 0; }
+  .card p { margin:.25rem 0; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  footer { margin-top:3.5rem; padding-top:1.5rem; border-top:1px solid var(--line);
+    color:var(--faint); font-size:.9rem; }
+  footer a { color:var(--faint); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Rentava Support</h1>
+  <p class="sub">Rentava · by Selora</p>
+
+  <p class="lead">Email <a href="mailto:support@selora.dev">support@selora.dev</a> and a real person will
+  reply, usually within one working day. Tell us your device and iOS version and we can help far faster.</p>
+
+  <h2>Common questions</h2>
+
+  <h2>A tenant paid part of the rent. Can I record that?</h2>
+  <p>Yes. Record the amount that actually arrived. Rentava keeps the charge open, shows the remaining
+  balance, and adds the rest when the next payment comes in. You never have to round a payment up or
+  invent a figure to make a month balance.</p>
+
+  <h2>Do I need an account?</h2>
+  <p>No. Rentava works fully offline and asks for nothing to get started. An account is only needed if you
+  want encrypted backup and syncing between your iPhone and iPad.</p>
+
+  <h2>Where is my data kept?</h2>
+  <p>On your device, in the app's own storage. If you turn on backup, a copy is also kept in your private
+  area of our cloud so you can restore it. See the <a href="/rentava/privacy/">privacy policy</a>.</p>
+
+  <h2>How do I delete my account?</h2>
+  <p>Open the <strong>More</strong> tab, tap <strong>Cloud account</strong>, then tap
+  <strong>Delete account</strong> at the bottom.
+  That erases your backed-up records and your sign-in permanently. Records already on your device are kept,
+  so the app keeps working offline; deleting the app removes those too.</p>
+
+  <h2>What do the plans include?</h2>
+  <div class="card">
+    <p><strong>Free</strong> — one property with one rentable unit, and up to ten stored documents.</p>
+    <p><strong>Plus</strong> — up to ten rentable units, unlimited documents, encrypted backup and sync
+    across your devices, and the full set of reports.</p>
+    <p><strong>Portfolio</strong> — up to thirty rentable units, everything in Plus, portfolio-wide
+    reporting, and up to three collaborators.</p>
+  </div>
+  <p>Plans are monthly or yearly, and the yearly price is lower per month. You can change or cancel at any
+  time in your Apple subscription settings.</p>
+
+  <h2>I paid but the app still says Free</h2>
+  <p>Open the <strong>More</strong> tab, tap <strong>Manage subscription</strong>, then
+  <strong>Restore purchases</strong>. Make sure you are signed
+  in to the same Apple Account that made the purchase. If it still does not appear, email us.</p>
+
+  <h2>How do I cancel?</h2>
+  <p>Cancelling is handled by Apple, not by us: open the Settings app, tap your name, then
+  <strong>Subscriptions</strong>, and choose Rentava. Your paid features stay available until the end of the
+  period you already paid for.</p>
+
+  <h2>Refunds</h2>
+  <p>Apple processes all refunds for App Store purchases. Request one at
+  <a href="https://reportaproblem.apple.com">reportaproblem.apple.com</a>. Tell us as well if something went
+  wrong, so we can fix it.</p>
+
+  <h2>Can I get my data out?</h2>
+  <p>Yes, on every plan including Free. Open <strong>More → Export data</strong> to export everything as
+  JSON and CSV, then share it anywhere iOS can send a file, including straight to an accountant.</p>
+
+  <h2>Something is wrong, or a translation reads badly</h2>
+  <p>Please tell us. Rentava is available in nine languages, and wording reports from people who actually
+  speak the language are the most useful messages we get.</p>
+
+  <h2>Still stuck?</h2>
+  <div class="card">
+    <p>Email <a href="mailto:support@selora.dev">support@selora.dev</a>. Include what you expected to happen
+    and what happened instead, and we will take it from there.</p>
+  </div>
+  <footer>
+    Selora · <a href="mailto:support@selora.dev">support@selora.dev</a> ·
+    <a href="/rentava/">Rentava</a> · <a href="/rentava/privacy/">Privacy</a> ·
+    <a href="/rentava/terms/">Terms</a>
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rentava — Rent tracking for landlords</title>
+<meta name="description" content="Rentava is a private rent and expense record for small landlords. Part payments, arrears, deposits, maintenance and reports, on your iPhone.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://selora.dev/rentava/">
+<meta property="og:title" content="Rentava — Rent tracking for landlords">
+<meta property="og:description" content="A private record of your rental business. Part payments, arrears, deposits and reports, on your iPhone.">
+<meta property="og:url" content="https://selora.dev/rentava/">
+<meta property="og:type" content="website">
+<style>
+  @font-face { font-family:"Lexend"; src:url("/rentava/fonts/Lexend.woff2") format("woff2-variations");
+    font-weight:100 900; font-display:swap; }
+
+  /* Rentava's own Brick & Linen palette, so the site and the app read as one product. */
+  :root {
+    --page:#F6F0EA; --surface:#FDF9F5; --ink:#1E1816; --muted:#6B5D58; --faint:#8A7A74;
+    --accent:#8E483F; --accent-strong:#6E332C; --tint:#EDD8D3; --line:#DCCFC8;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page:#14100F; --surface:#1D1716; --ink:#F8F0ED; --muted:#C2B1AC; --faint:#9C8A85;
+            --accent:#E08A7E; --accent-strong:#F2A095; --tint:#38211F; --line:#40312E; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--page); color:var(--ink); text-align:center;
+    font:17px/1.6 "Lexend", -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:600px; margin:0 auto; padding:13vh 24px 96px; }
+  .mark { width:88px; height:88px; border-radius:22px; display:inline-flex; align-items:center;
+    justify-content:center; margin-bottom:1.5rem; background:linear-gradient(180deg,#A85A4E,#6E332C);
+    box-shadow:0 12px 32px rgba(110,51,44,.28); }
+  h1 { font-weight:600; font-size:2.5rem; line-height:1.1; margin:0 0 .5rem; letter-spacing:-.015em; }
+  p.tag { color:var(--muted); font-size:1.06rem; margin:0 auto 1.4rem; max-width:40ch; text-wrap:pretty; }
+  .meta { font-size:.8rem; color:var(--faint); letter-spacing:.02em; margin:0 0 2.2rem; }
+  .points { display:grid; gap:10px; text-align:left; margin:0 0 2.4rem; }
+  .point { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 18px; }
+  .point b { display:block; font-weight:600; font-size:.97rem; }
+  .point span { color:var(--muted); font-size:.93rem; }
+  .links a { display:inline-block; color:var(--accent); text-decoration:none; margin:0 .55rem .4rem;
+    border-bottom:1px solid var(--line); padding-bottom:2px; font-weight:500;
+    transition:border-color .18s cubic-bezier(.2,.9,.1,1); }
+  .links a:hover, .links a:focus-visible { border-color:var(--accent); }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  footer { margin-top:3rem; color:var(--faint); font-size:.9rem; }
+  footer a { color:var(--faint); }
+  @media (prefers-reduced-motion: reduce) { * { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="mark" aria-hidden="true">
+    <svg width="48" height="48" viewBox="0 0 100 100" role="img">
+      <path d="M50 12 L86 40 L86 46 L14 46 L14 40 Z" fill="#F6E7E3"/>
+      <rect x="22" y="52" width="56" height="36" rx="6" fill="#F6E7E3"/>
+      <rect x="33" y="62" width="16" height="16" rx="3" fill="#6E332C"/>
+      <rect x="55" y="62" width="12" height="26" rx="3" fill="#6E332C"/>
+    </svg>
+  </div>
+
+  <h1>Rentava</h1>
+  <p class="tag">A private record of your rental business. Rent, arrears, deposits, expenses and
+  maintenance, kept on your iPhone.</p>
+  <p class="meta">by Selora · for iPhone and iPad · iOS 18 or later</p>
+
+  <div class="points">
+    <div class="point"><b>Part payments handled properly</b>
+      <span>Half now and half on Friday still leaves a balance you can trust.</span></div>
+    <div class="point"><b>Works with no signal</b>
+      <span>Your records live on the device. No bank connection, no tenant invitations.</span></div>
+    <div class="point"><b>Nine languages</b>
+      <span>English, Hungarian, German, Spanish, French, Italian, Portuguese, Dutch and Polish.</span></div>
+  </div>
+
+  <p class="links">
+    <a href="/rentava/support/">Support</a>
+    <a href="/rentava/privacy/">Privacy</a>
+    <a href="/rentava/terms/">Terms</a>
+  </p>
+
+  <footer>
+    <a href="/">Selora</a> · <a href="mailto:support@selora.dev">support@selora.dev</a>
+  </footer>
+</main>
+</body>
+</html>
