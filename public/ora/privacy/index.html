@@ -100,6 +100,7 @@
   <p class="sub">Last updated 10 November 2026</p>
   <p class="lead">Ora keeps your work records on your Android device. You can choose to make copies
   or share reports. Ora does not require an Ora account or carry in-app advertising.</p>
+  <p><a href="#android-data-deletion">How to delete your data or request deletion</a></p>
 
   <h3>Work records and files</h3>
   <p>Ora keeps your jobs, shifts, breaks, rates, estimated earnings, notes, goals and settings on your
@@ -114,13 +115,12 @@
 
   <h3>Optional Google Drive sync</h3>
   <p>If Drive sync is available in your version and you enable it, Ora sends supported work records
-  and their changes to its hidden application folder in your Google Drive. Other Android devices
-  running Ora can read those changes after you connect the same Google Account. Ora requests access to its own application folder.
-  Saved workplace coordinates can be included. You can disconnect in Ora or remove access in your Google
-  Account. Erase all data also requests deletion from the linked account. If Drive cleanup is pending,
-  reopen Ora and reconnect the same Google Account if prompted. Use Ora's erase action to apply the reset
-  on other connected devices. Removing Ora's hidden app data directly in Drive removes the copy stored
-  there at that time. See
+  and their changes to its hidden application folder in your Google Drive. These can include earnings,
+  notes and saved workplace coordinates. Ora sends a random identifier for each installation to tell
+  which device made a change. Other Android devices running Ora can read those changes after you
+  connect the same Google Account. Ora requests access to its own application folder and syncs
+  automatically while sync is enabled. You can disconnect in Ora or remove access in your Google
+  Account. See
   <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.</p>
 
   <h3>Location and notifications</h3>
@@ -138,19 +138,30 @@
   and technical request information. Ora does not receive payment-card details or send your work records
   to RevenueCat. Play and App Store purchases are separate. See
   <a href="https://www.revenuecat.com/privacy/">RevenueCat's Privacy Policy</a>.</p>
+  <p>The Google Play Billing library sends technical diagnostics to Google, such as billing errors,
+  response times and app and device information. The purchase service can use Google Play services
+  to back up Ora's billing identifier so purchases can be restored. Neither flow contains your work
+  records. See <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.</p>
   <p>Google Play also checks the source of the app installation to help ensure it came through Play.
   That check is separate from Ora Pro and does not use your work records.</p>
 
-  <h3>Exchange rates, device authentication and support</h3>
+  <h3>Exchange rates and device authentication</h3>
   <p>Ora may download public reference rates from the European Central Bank. The connection exposes
   standard network information such as your IP address. It does not send your jobs, amounts, or selected
   currencies. Ora keeps a local rates copy for offline conversions. Android handles fingerprint, face or
   device credential authentication when you choose to use it to reveal amounts.</p>
-  <p>If you email support, Selora receives your email and the information you choose to include.
-  We keep support emails until we delete them or you ask us to delete them.
-  To request access to or deletion of support or purchase-service information, email
-  <a href="mailto:support@selora.dev">support@selora.dev</a> and share only what is necessary to locate it.
-  Clearing Ora's storage leaves Google Play purchase records and copies you saved elsewhere.</p>
+
+  <h3 id="android-data-deletion">Data deletion and support</h3>
+  <p>To request access to or deletion of support or purchase-service information, email
+  <a href="mailto:support@selora.dev?subject=Ora%20data%20deletion">support@selora.dev</a> and tell us
+  which information you want us to find. If you email support, Selora receives your email and the
+  information you choose to include. We keep support emails until we delete them or you ask us to
+  delete them. Google Play keeps its own purchase records under Google's policies.</p>
+  <p>To remove your ledger from your linked Google Drive as well as this device, use <strong>Erase
+  all data</strong> in Ora Settings. If Drive cleanup is pending, reopen Ora and reconnect the same
+  Google Account if prompted. Ora's erase action applies the reset on other connected devices.
+  Removing Ora's hidden app data directly in Drive removes the copy stored there at that time.
+  Manage any reports or backups you saved separately in the locations you chose.</p>
   </section>
 
   <h2>Changes and contact</h2>
