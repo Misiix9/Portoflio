@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ora: Support</title>
-<meta name="description" content="Support for Ora, the calm shift and earnings tracker for iPhone and iPad.">
+<meta name="description" content="Support for Ora, the work-hours and estimated-pay tracker for iPhone, iPad, and Android.">
 <style>
   :root { --paper:#F4F3EF; --ink:#1B1E1C; --muted:#5C635D; --faint:#8A908A; --accent:#1F5C3D; --line:#E4E2DB; --card:#FBFAF7; }
   * { box-sizing:border-box; }
@@ -13,6 +13,7 @@
   .wrap { max-width:720px; margin:0 auto; padding:48px 24px 96px; }
   h1 { font-family:Georgia,"Times New Roman",serif; font-size:2.2rem; line-height:1.15; margin:0 0 .25rem; letter-spacing:-.01em; }
   h2 { font-family:Georgia,"Times New Roman",serif; font-size:1.15rem; margin:1.8rem 0 .35rem; }
+  h3 { font-family:Georgia,"Times New Roman",serif; font-size:1.08rem; margin:1.55rem 0 .3rem; }
   .sub { color:var(--faint); font-size:.95rem; margin:0 0 2rem; }
   p, li { color:var(--muted); }
   a { color:var(--accent); }
@@ -27,6 +28,9 @@
 <body>
 <main class="wrap">
   <h1>Support</h1>
+  <nav aria-label="Platform"><a href="#apple">iPhone and iPad</a> · <a href="#android">Android</a></nav>
+
+  <section aria-label="iPhone and iPad" id="apple">
   <p class="sub">Ora · by Selora</p>
 
   <p class="lead"><strong>Ora</strong> is a calm shift &amp; earnings tracker for iPhone and iPad: log your
@@ -61,6 +65,36 @@
   <h2>How is my pay calculated?</h2>
   <p>Ora computes base, overtime, night, weekend, and holiday pay from the rules you set per job. All amounts are
   <strong>estimates</strong> to help you track your earnings. They are not payslips and are not tax or legal advice.</p>
+  </section>
+
+  <section aria-labelledby="android">
+  <h2 id="android">Android</h2>
+  <p class="lead">Track work hours, record paid and unpaid breaks, and review estimated pay. Ora works
+  offline and keeps your work ledger on your device. You can choose to make a backup.</p>
+
+  <div class="card contact">
+    <p>Need help? Email <a href="mailto:support@selora.dev">support@selora.dev</a>.
+    Include your Ora version, Android version, device model and the steps you took. Please leave employer
+    details, real pay, and account credentials out of screenshots.</p>
+  </div>
+
+  <h3>How do I restore Ora Pro?</h3>
+  <p>In Ora, open the lifetime access screen and choose <strong>Restore purchase</strong>. Use the same
+  Google Play account that bought Ora Pro. A Google Play purchase applies to Android. If you bought
+  Ora Pro from Apple's App Store, restore it in the iPhone or iPad app.</p>
+
+  <h3>How do I back up or move my shifts?</h3>
+  <p>Use <strong>Export backup (JSON)</strong> in Settings and choose where to save the file.
+  Use <strong>Import backup</strong> in Ora on the destination device. If Drive sync is available
+  in your version, you can enable it between Android devices on the same Google Account. For a report,
+  Ora Pro can export a timesheet as PDF or CSV. See the <a href="/ora/privacy/#android">Android privacy policy</a> for
+  information about backup contents, Drive and location permissions.</p>
+
+  <h3>How do I erase my work records?</h3>
+  <p>Open Settings, choose <strong>Erase all data</strong> and type the confirmation word shown in Ora.
+  If Ora shows a pending Drive cleanup, use the retry control or reconnect the same Google Account.
+  Copies you already saved or shared stay in the locations you chose.</p>
+  </section>
 
   <footer>Selora · Ora · <a href="/ora/privacy/">Privacy Policy</a></footer>
 </main>

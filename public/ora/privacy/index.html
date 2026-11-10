@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ora: Privacy Policy</title>
-<meta name="description" content="How Ora stores work records and uses Apple, private iCloud and RevenueCat for optional purchases.">
+<meta name="description" content="How Ora handles work records, optional sync, purchases, and location on iPhone, iPad, and Android.">
 <style>
   :root { --paper:#F4F3EF; --ink:#1B1E1C; --muted:#5C635D; --faint:#8A908A; --accent:#1F5C3D; --line:#E4E2DB; --card:#FBFAF7; }
   * { box-sizing:border-box; }
@@ -13,6 +13,7 @@
   .wrap { max-width:720px; margin:0 auto; padding:48px 24px 96px; }
   h1 { font-family:Georgia,"Times New Roman",serif; font-size:2.2rem; line-height:1.15; margin:0 0 .25rem; letter-spacing:-.01em; }
   h2 { font-family:Georgia,"Times New Roman",serif; font-size:1.3rem; margin:2.2rem 0 .5rem; }
+  h3 { font-family:Georgia,"Times New Roman",serif; font-size:1.12rem; margin:1.6rem 0 .4rem; }
   .sub { color:var(--faint); font-size:.95rem; margin:0 0 2rem; }
   p, li { color:var(--muted); }
   a { color:var(--accent); }
@@ -27,6 +28,9 @@
 <body>
 <main class="wrap">
   <h1>Privacy Policy</h1>
+  <nav aria-label="Platform"><a href="#apple">iPhone and iPad</a> · <a href="#android">Android</a></nav>
+
+  <section aria-label="iPhone and iPad" id="apple">
   <p class="sub">Ora · by Selora · last updated 30 October 2026</p>
 
   <p class="lead"><strong>Your work records stay on your device or in your private iCloud account.</strong>
@@ -89,6 +93,65 @@
   <h2>Children</h2>
   <p>Ora is not directed at children. It does not require app sign-up or ask for a child's name or age.
   Purchase processing is described above.</p>
+  </section>
+
+  <section aria-labelledby="android">
+  <h2 id="android">Android</h2>
+  <p class="sub">Last updated 10 November 2026</p>
+  <p class="lead">Ora keeps your work records on your Android device. You can choose to make copies
+  or share reports. Ora does not require an Ora account or carry in-app advertising.</p>
+
+  <h3>Work records and files</h3>
+  <p>Ora keeps your jobs, shifts, breaks, rates, estimated earnings, notes, goals and settings on your
+  device. When you create a backup or report, you choose where to save or share it. You can optionally
+  let Ora check for a weekly backup when you open it and save a full ledger copy to a folder you choose.
+  Those copies include earnings, notes and saved workplace coordinates even when Hide earnings is on.
+  Turning off weekly backups leaves existing copies in the selected folder.</p>
+  <p>To remove your ledger, open Ora Settings and choose <strong>Erase all data</strong>. Ora clears work
+  records, private pay reviews and its document caches on this device. Clearing Ora's storage or
+  uninstalling Ora also removes the device copy. Other apps, folder providers and people you share with
+  may retain copies. Manage saved backups and reports in the locations you chose for them.</p>
+
+  <h3>Optional Google Drive sync</h3>
+  <p>If Drive sync is available in your version and you enable it, Ora sends supported work records
+  and their changes to its hidden application folder in your Google Drive. Other Android devices
+  running Ora can read those changes after you connect the same Google Account. Ora requests access to its own application folder.
+  Saved workplace coordinates can be included. You can disconnect in Ora or remove access in your Google
+  Account. Erase all data also requests deletion from the linked account. If Drive cleanup is pending,
+  reopen Ora and reconnect the same Google Account if prompted. Use Ora's erase action to apply the reset
+  on other connected devices. Removing Ora's hidden app data directly in Drive removes the copy stored
+  there at that time. See
+  <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.</p>
+
+  <h3>Location and notifications</h3>
+  <p>Ora uses a precise location when you ask it to save a workplace. The saved coordinates stay with
+  that job and can be included in backups and optional Drive sync. If you turn on workplace reminders
+  and grant background location access, Android location services check when you arrive or leave even
+  when Ora is closed. Ora uses these checks to remind you to clock in or out. You choose when to record
+  work. You can turn reminders off, revoke location access in Android Settings, or remove the workplace
+  from the job. Ora Pro offer notifications have a separate switch and are optional.</p>
+
+  <h3>Lifetime purchases</h3>
+  <p>Google Play handles payment. Ora uses Google Play and RevenueCat to check purchase status, grant
+  or restore access, prevent purchase fraud and understand purchase activity. Ora can check access when
+  you open the app. RevenueCat processes an anonymous app identifier, purchase tokens, purchase history
+  and technical request information. Ora does not receive payment-card details or send your work records
+  to RevenueCat. Play and App Store purchases are separate. See
+  <a href="https://www.revenuecat.com/privacy/">RevenueCat's Privacy Policy</a>.</p>
+  <p>Google Play also checks the source of the app installation to help ensure it came through Play.
+  That check is separate from Ora Pro and does not use your work records.</p>
+
+  <h3>Exchange rates, device authentication and support</h3>
+  <p>Ora may download public reference rates from the European Central Bank. The connection exposes
+  standard network information such as your IP address. It does not send your jobs, amounts, or selected
+  currencies. Ora keeps a local rates copy for offline conversions. Android handles fingerprint, face or
+  device credential authentication when you choose to use it to reveal amounts.</p>
+  <p>If you email support, Selora receives your email and the information you choose to include.
+  We keep support emails until we delete them or you ask us to delete them.
+  To request access to or deletion of support or purchase-service information, email
+  <a href="mailto:support@selora.dev">support@selora.dev</a> and share only what is necessary to locate it.
+  Clearing Ora's storage leaves Google Play purchase records and copies you saved elsewhere.</p>
+  </section>
 
   <h2>Changes and contact</h2>
   <p>Changes to this policy will be posted here with an updated date. Questions about privacy?
